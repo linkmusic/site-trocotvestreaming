@@ -496,7 +496,7 @@
       "id": 23,
       "name": "Canva Pro",
       "icon": "fas fa-palette",
-      "category": "edicao",
+      "category": "Edição",
       "description": "Assinatura premium do Canva para design gráfico profissional.",
       "variations": [
         {
@@ -511,7 +511,7 @@
       "id": 24,
       "name": "Capcut Pro",
       "icon": "fas fa-film",
-      "category": "edicao",
+      "category": "Edição",
       "description": "Versão Pro do CapCut para edição de vídeos avançada.",
       "variations": [
         {
@@ -526,7 +526,7 @@
       "id": 25,
       "name": "ChatGPT Plus",
       "icon": "fas fa-robot",
-      "category": "ia",
+      "category": "Inteligência Artificial",
       "description": "Assinatura premium do ChatGPT com acesso a GPT-4 e recursos avançados.",
       "variations": [
         {
@@ -541,7 +541,7 @@
       "id": 26,
       "name": "Veo 3 + Gemini Pro",
       "icon": "fas fa-brain",
-      "category": "ia",
+      "category": "Inteligência Artificial",
       "description": "Pacote premium de inteligência artificial com convite exclusivo.",
       "variations": [
         {
