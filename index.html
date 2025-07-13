@@ -21,16 +21,13 @@
     <div class="cart-dropdown" id="cartDropdown">
       <h3><i class="fas fa-shopping-cart"></i> Seu Carrinho</h3>
       <div id="cart-items"></div>
-      
       <div class="coupon-container">
         <input type="text" class="coupon-input" id="couponInput" placeholder="Código de desconto">
         <button class="apply-coupon" onclick="applyCoupon()">Aplicar</button>
       </div>
-      
       <div class="discount-applied" id="discountApplied">
         <i class="fas fa-tag"></i> Cupom aplicado: <span id="discountValue">10%</span> de desconto
       </div>
-      
       <div class="cart-total">
         Total: <span id="cart-total">R$ 0,00</span>
         <div id="cart-discount" style="color: var(--discount-color); display: none;">
@@ -40,7 +37,6 @@
           Total com desconto: <span id="final-total">R$ 0,00</span>
         </div>
       </div>
-      
       <button class="btn btn-success checkout-btn" onclick="checkout()">
         <i class="fab fa-whatsapp"></i> Finalizar Pedido
       </button>
@@ -53,30 +49,16 @@
         <h1><i class="fas fa-tv"></i> Troço TV e Streaming</h1>
         <p>Assinaturas de streaming com os melhores preços</p>
       </header>
-      
       <div class="category-tabs" id="categoryTabs"></div>
-      
       <div id="productsByCategory"></div>
     </div>
   </div>
 
   <div class="floating-buttons-container">
-    <div class="floating-button group-btn" onclick="openGroupWhatsApp()">
-      <i class="fab fa-whatsapp"></i>
-      <span class="tooltip">Grupo de Clientes</span>
-    </div>
-    <div class="floating-button telegram-btn" onclick="openTelegram()">
-      <i class="fab fa-telegram"></i>
-      <span class="tooltip">Suporte Telegram</span>
-    </div>
-    <div class="floating-button whatsapp-btn" onclick="openSupportWhatsApp()">
-      <i class="fab fa-whatsapp"></i>
-      <span class="tooltip">Suporte WhatsApp</span>
-    </div>
-    <div class="floating-button checkout-btn-float" onclick="checkout()">
-      <i class="fas fa-shopping-cart"></i>
-      <span class="tooltip">Finalizar Pedido</span>
-    </div>
+    <div class="floating-button group-btn" onclick="openGroupWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Grupo de Clientes</span></div>
+    <div class="floating-button telegram-btn" onclick="openTelegram()"><i class="fab fa-telegram"></i><span class="tooltip">Suporte Telegram</span></div>
+    <div class="floating-button whatsapp-btn" onclick="openSupportWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Suporte WhatsApp</span></div>
+    <div class="floating-button checkout-btn-float" onclick="checkout()"><i class="fas fa-shopping-cart"></i><span class="tooltip">Finalizar Pedido</span></div>
   </div>
 
   <script src="js/scripts.js"></script>

@@ -44,27 +44,20 @@
 
     <div class="container">
       <div id="productDetail">
-        <a class="top-back-link" href="index.html">
-          <i class="fas fa-arrow-left"></i> Voltar para produtos
-        </a>
-        
+        <a class="top-back-link" href="index.html"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
         <div class="product-detail fade-in">
           <h2 id="productName"><i class="fas fa-spinner fa-spin"></i> Carregando...</h2>
           <p id="productDescription"></p>
-          
           <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
           <div id="variationsContainer"></div>
-          
           <div class="selected-variation">
             <strong>Selecionado:</strong> <span id="selectedVariation">-</span>
           </div>
-          
           <div class="quantity-control">
             <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
             <input type="number" class="quantity-input" id="productQuantity" value="1" min="1" onchange="updateQuantityInput()">
             <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
           </div>
-          
           <button class="btn btn-primary" onclick="addToCart()">
             <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
           </button>
@@ -73,22 +66,10 @@
     </div>
 
     <div class="floating-buttons-container">
-        <div class="floating-button group-btn" onclick="openGroupWhatsApp()">
-          <i class="fab fa-whatsapp"></i>
-          <span class="tooltip">Grupo de Clientes</span>
-        </div>
-        <div class="floating-button telegram-btn" onclick="openTelegram()">
-          <i class="fab fa-telegram"></i>
-          <span class="tooltip">Suporte Telegram</span>
-        </div>
-        <div class="floating-button whatsapp-btn" onclick="openSupportWhatsApp()">
-          <i class="fab fa-whatsapp"></i>
-          <span class="tooltip">Suporte WhatsApp</span>
-        </div>
-        <div class="floating-button checkout-btn-float" onclick="checkout()">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="tooltip">Finalizar Pedido</span>
-        </div>
+        <div class="floating-button group-btn" onclick="openGroupWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Grupo de Clientes</span></div>
+        <div class="floating-button telegram-btn" onclick="openTelegram()"><i class="fab fa-telegram"></i><span class="tooltip">Suporte Telegram</span></div>
+        <div class="floating-button whatsapp-btn" onclick="openSupportWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Suporte WhatsApp</span></div>
+        <div class="floating-button checkout-btn-float" onclick="checkout()"><i class="fas fa-shopping-cart"></i><span class="tooltip">Finalizar Pedido</span></div>
     </div>
 
     <script src="js/detalhes.js"></script>
