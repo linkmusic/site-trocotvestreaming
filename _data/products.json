@@ -65,36 +65,6 @@
           "important": "Requer configuração inicial | Suporte por 30 dias | Método não convencional"
         }
       ]
-    },
-    {
-      "id": 23,
-      "name": "Canva Pro",
-      "icon": "fas fa-palette",
-      "category": "edicao",
-      "description": "Assinatura premium do Canva para design gráfico profissional.",
-      "variations": [
-        {
-          "name": "Via Link - Mensal",
-          "price": 4.99,
-          "details": "Ativação via link exclusivo | Acesso a todos os recursos Pro | Templates premium",
-          "important": "Renovação mensal | Suporte para configuração inicial"
-        }
-      ]
-    },
-    {
-      "id": 25,
-      "name": "ChatGPT Plus",
-      "icon": "fas fa-robot",
-      "category": "ia",
-      "description": "Assinatura premium do ChatGPT com acesso a GPT-4 e recursos avançados.",
-      "variations": [
-        {
-          "name": "Compartilhado - Mensal",
-          "price": 19.99,
-          "details": "Acesso compartilhado ao ChatGPT Plus | GPT-4 disponível | Respostas prioritárias",
-          "important": "Limite de uso simultâneo | Renovação mensal | Suporte 24h"
-        }
-      ]
     }
   ]
 }

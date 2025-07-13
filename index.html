@@ -267,37 +267,45 @@
 
     function applyCoupon() {
         const couponCode = document.getElementById("couponInput").value.trim().toUpperCase();
-        if (couponCode === settings.coupon.code.toUpperCase()) { discountApplied = true; showAlert("Cupom aplicado!", "success"); } 
+        if (settings.coupon && couponCode === settings.coupon.code.toUpperCase()) { discountApplied = true; showAlert("Cupom aplicado!", "success"); } 
         else { discountApplied = false; showAlert("Cupom inválido.", "danger"); }
         updateCartTotals();
     }
     
     function updateCartTotals() {
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const discount = discountApplied ? subtotal * settings.coupon.percentage : 0;
+        const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
         const total = subtotal - discount;
-        document.getElementById("cart-total").textContent = formatPrice(subtotal);
-        document.getElementById("discount-amount").textContent = formatPrice(discount);
-        document.getElementById("final-total").textContent = formatPrice(total);
-        document.getElementById("discount-applied").style.display = discountApplied ? 'block' : 'none';
-        document.getElementById("cart-discount").style.display = discountApplied ? 'block' : 'none';
+        const cartTotalEl = document.getElementById("cart-total");
+        const discountAmountEl = document.getElementById("discount-amount");
+        const finalTotalEl = document.getElementById("final-total");
+        const discountAppliedEl = document.getElementById("discount-applied");
+        const cartDiscountEl = document.getElementById("cart-discount");
+
+        if(cartTotalEl) cartTotalEl.textContent = formatPrice(subtotal);
+        if(discountAmountEl) discountAmountEl.textContent = formatPrice(discount);
+        if(finalTotalEl) finalTotalEl.textContent = formatPrice(total);
+        if(discountAppliedEl) discountAppliedEl.style.display = discountApplied ? 'block' : 'none';
+        if(cartDiscountEl) cartDiscountEl.style.display = discountApplied ? 'block' : 'none';
     }
 
     function checkout() {
         if (cart.length === 0) { showAlert("Seu carrinho está vazio.", "danger"); return; }
-        const totals = { subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0), discount: 0, total: 0 };
-        if(discountApplied) totals.discount = totals.subtotal * settings.coupon.percentage;
-        totals.total = totals.subtotal - totals.discount;
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
+        const total = subtotal - discount;
         let itemsText = cart.map(item => `*${item.name} - ${item.variation}*\nQuantidade: ${item.quantity}\nSubtotal: ${formatPrice(item.price * item.quantity)}`).join("\n\n");
-        let message = `Olá, gostaria de adquirir os seguintes planos:\n\n${itemsText}\n\n*Subtotal: ${formatPrice(totals.subtotal)}*`;
-        if(discountApplied) message += `\n*Desconto: -${formatPrice(totals.discount)}*`;
-        message += `\n*Total: ${formatPrice(totals.total)}*\n\nPor favor, informe os próximos passos para finalizar.`;
-        window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent(message)}`, "_blank");
+        let message = `Olá, gostaria de adquirir os seguintes planos:\n\n${itemsText}\n\n*Subtotal: ${formatPrice(subtotal)}*`;
+        if(discountApplied) message += `\n*Desconto: -${formatPrice(discount)}*`;
+        message += `\n*Total: ${formatPrice(total)}*\n\nPor favor, informe os próximos passos para finalizar.`;
+        if (settings.links && settings.links.support_whatsapp_number) {
+            window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent(message)}`, "_blank");
+        }
     }
 
-    function openSupportWhatsApp() { window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent("Olá, preciso de suporte!")}`, "_blank"); }
-    function openTelegram() { window.open(settings.links.support_telegram, "_blank"); }
-    function openGroupWhatsApp() { window.open(settings.links.group_whatsapp, "_blank"); }
+    function openSupportWhatsApp() { if (settings.links && settings.links.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent("Olá, preciso de suporte!")}`, "_blank"); }
+    function openTelegram() { if (settings.links && settings.links.support_telegram) window.open(settings.links.support_telegram, "_blank"); }
+    function openGroupWhatsApp() { if (settings.links && settings.links.group_whatsapp) window.open(settings.links.group_whatsapp, "_blank"); }
 
     // --- Inicialização da Página ---
     async function initPage() {
@@ -308,11 +316,10 @@
             [settings, { items }] = await Promise.all([settingsPromise, productsPromise]);
             products = items;
 
-            // Aplicar configurações gerais
             document.title = settings.title || "Troço TV e Streaming";
             document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
             document.getElementById("site-tagline").textContent = settings.tagline;
-            document.getElementById("discountValue").textContent = `${settings.coupon.percentage * 100}%`;
+            if(settings.coupon) document.getElementById("discountValue").textContent = `${settings.coupon.percentage * 100}%`;
 
             loadCart();
             renderCategories();
