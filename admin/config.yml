@@ -1,39 +1,57 @@
-# Backend de configuração para Netlify
 backend:
   name: git-gateway
-  branch: main # IMPORTANTE: Verifique se o nome da sua branch principal no GitHub é "main" ou "master" e altere aqui se for necessário.
+  branch: main
 
-# Onde o CMS vai guardar as imagens que fizer upload
-media_folder: "assets/images" 
-public_folder: "/assets/images"
+site_url: https://trocotvestreaming.site
 
-# Coleção de conteúdo editável
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
 collections:
-  - name: "products"
-    label: "Produtos"
+  - name: "configuracoes"
+    label: "Configurações do Site"
+    description: "Edite aqui as configurações gerais e a lista de produtos."
     files:
-      - label: "Lista de Produtos"
-        name: "products_list"
-        file: "_data/products.json" # Caminho para o ficheiro de dados
-        fields: # Campos editáveis para a lista de produtos
-          # O Decap CMS irá tratar isto como um editor para a lista completa no ficheiro JSON.
-          - name: items # Nome do campo que representa a lista inteira
-            label: Lista de Produtos
-            widget: list # Widget de lista
-            fields: # Campos para cada item DENTRO da lista
-              - { label: "ID do Produto", name: "id", widget: "number", value_type: "int" }
+      - name: "settings"
+        label: "Configurações Gerais"
+        file: "_data/settings.json"
+        fields:
+          - { label: "Título Principal do Site", name: "title", widget: "string" }
+          - { label: "Slogan abaixo do Título", name: "tagline", widget: "string" }
+          - label: "Links de Suporte"
+            name: "links"
+            widget: "object"
+            fields:
+              - { label: "Link do Grupo WhatsApp", name: "group_whatsapp", widget: "string" }
+              - { label: "Link do Suporte Telegram", name: "support_telegram", widget: "string" }
+              - { label: "Número do Suporte WhatsApp (com +55)", name: "support_whatsapp_number", widget: "string" }
+          - label: "Cupom de Desconto"
+            name: "coupon"
+            widget: "object"
+            fields:
+              - { label: "Código do Cupom (ex: DESC10)", name: "code", widget: "string" }
+              - { label: "Percentagem de Desconto (ex: 0.1 para 10%)", name: "percentage", widget: "number" }
+
+      - name: "products"
+        label: "Produtos e Assinaturas"
+        file: "_data/products.json"
+        fields:
+          - name: "items"
+            label: "Lista de Produtos"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "ID (número único)", name: "id", widget: "number" }
               - { label: "Nome do Produto", name: "name", widget: "string" }
-              - { label: "Ícone (classes Font Awesome)", name: "icon", widget: "string" }
-              - label: "Categoria"
-                name: "category"
-                widget: "select"
-                options: ["streaming", "musica", "vitalicios", "edicao", "ia"]
-              - { label: "Descrição Curta", name: "description", widget: "text" }
-              - label: "Variações de Planos"
+              - { label: "Ícone (ex: fas fa-film)", name: "icon", widget: "string" }
+              - { label: "Categoria", name: "category", widget: "string" }
+              - { label: "Descrição Curta", name: "description", widget: "string" }
+              - label: "Variações do Produto (planos)"
                 name: "variations"
                 widget: "list"
+                summary: "{{fields.name}} - R$ {{fields.price}}"
                 fields:
                   - { label: "Nome da Variação", name: "name", widget: "string" }
-                  - { label: "Preço", name: "price", widget: "number", value_type: "float" }
+                  - { label: "Preço", name: "price", widget: "number" }
                   - { label: "Detalhes", name: "details", widget: "text" }
                   - { label: "Nota Importante", name: "important", widget: "text" }
