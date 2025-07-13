@@ -1,0 +1,39 @@
+# Backend de configuração para Netlify
+backend:
+  name: git-gateway
+  branch: main # IMPORTANTE: Verifique se o nome da sua branch principal no GitHub é "main" ou "master" e altere aqui se for necessário.
+
+# Onde o CMS vai guardar as imagens que fizer upload
+media_folder: "assets/images" 
+public_folder: "/assets/images"
+
+# Coleção de conteúdo editável
+collections:
+  - name: "products"
+    label: "Produtos"
+    files:
+      - label: "Lista de Produtos"
+        name: "products_list"
+        file: "_data/products.json" # Caminho para o ficheiro de dados
+        fields: # Campos editáveis para a lista de produtos
+          # O Decap CMS irá tratar isto como um editor para a lista completa no ficheiro JSON.
+          - name: items # Nome do campo que representa a lista inteira
+            label: Lista de Produtos
+            widget: list # Widget de lista
+            fields: # Campos para cada item DENTRO da lista
+              - { label: "ID do Produto", name: "id", widget: "number", value_type: "int" }
+              - { label: "Nome do Produto", name: "name", widget: "string" }
+              - { label: "Ícone (classes Font Awesome)", name: "icon", widget: "string" }
+              - label: "Categoria"
+                name: "category"
+                widget: "select"
+                options: ["streaming", "musica", "vitalicios", "edicao", "ia"]
+              - { label: "Descrição Curta", name: "description", widget: "text" }
+              - label: "Variações de Planos"
+                name: "variations"
+                widget: "list"
+                fields:
+                  - { label: "Nome da Variação", name: "name", widget: "string" }
+                  - { label: "Preço", name: "price", widget: "number", value_type: "float" }
+                  - { label: "Detalhes", name: "details", widget: "text" }
+                  - { label: "Nota Importante", name: "important", widget: "text" }

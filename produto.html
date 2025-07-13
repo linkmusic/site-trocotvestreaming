@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Detalhes do Produto - Troço TV e Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <div class="floating-cart">
+        <div class="cart-summary">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Carrinho (<span id="cart-count">0</span>)</span>
+        </div>
+        <button class="cart-toggle" onclick="toggleCart()">
+          <span>Ver Carrinho</span>
+          <div class="cart-count" id="cart-badge">0</div>
+        </button>
+        <div class="cart-dropdown" id="cartDropdown">
+          <h3><i class="fas fa-shopping-cart"></i> Seu Carrinho</h3>
+          <div id="cart-items"></div>
+          <div class="coupon-container">
+            <input type="text" class="coupon-input" id="couponInput" placeholder="Código de desconto">
+            <button class="apply-coupon" onclick="applyCoupon()">Aplicar</button>
+          </div>
+          <div class="discount-applied" id="discountApplied">
+            <i class="fas fa-tag"></i> Cupom aplicado: <span id="discountValue">10%</span> de desconto
+          </div>
+          <div class="cart-total">
+            Total: <span id="cart-total">R$ 0,00</span>
+            <div id="cart-discount" style="color: var(--discount-color); display: none;">
+              Desconto: -<span id="discount-amount">R$ 0,00</span>
+            </div>
+            <div id="cart-final-total">
+              Total com desconto: <span id="final-total">R$ 0,00</span>
+            </div>
+          </div>
+          <button class="btn btn-success checkout-btn" onclick="checkout()">
+            <i class="fab fa-whatsapp"></i> Finalizar Pedido
+          </button>
+        </div>
+    </div>
+
+    <div class="container">
+      <div id="productDetail">
+        <a class="top-back-link" href="index.html">
+          <i class="fas fa-arrow-left"></i> Voltar para produtos
+        </a>
+        
+        <div class="product-detail fade-in">
+          <h2 id="productName"><i class="fas fa-spinner fa-spin"></i> Carregando...</h2>
+          <p id="productDescription"></p>
+          
+          <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
+          <div id="variationsContainer"></div>
+          
+          <div class="selected-variation">
+            <strong>Selecionado:</strong> <span id="selectedVariation">-</span>
+          </div>
+          
+          <div class="quantity-control">
+            <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+            <input type="number" class="quantity-input" id="productQuantity" value="1" min="1" onchange="updateQuantityInput()">
+            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+          </div>
+          
+          <button class="btn btn-primary" onclick="addToCart()">
+            <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="floating-buttons-container">
+        <div class="floating-button group-btn" onclick="openGroupWhatsApp()">
+          <i class="fab fa-whatsapp"></i>
+          <span class="tooltip">Grupo de Clientes</span>
+        </div>
+        <div class="floating-button telegram-btn" onclick="openTelegram()">
+          <i class="fab fa-telegram"></i>
+          <span class="tooltip">Suporte Telegram</span>
+        </div>
+        <div class="floating-button whatsapp-btn" onclick="openSupportWhatsApp()">
+          <i class="fab fa-whatsapp"></i>
+          <span class="tooltip">Suporte WhatsApp</span>
+        </div>
+        <div class="floating-button checkout-btn-float" onclick="checkout()">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="tooltip">Finalizar Pedido</span>
+        </div>
+    </div>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/detalhes.js"></script>
+</body>
+</html>
