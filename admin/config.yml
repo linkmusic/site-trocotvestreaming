@@ -14,7 +14,7 @@ collections:
     files:
       - name: "settings"
         label: "Configurações Gerais"
-        file: "data/settings.json"
+        file: "_data/settings.json"
         fields:
           - { label: "Título Principal do Site", name: "title", widget: "string" }
           - { label: "Slogan abaixo do Título", name: "tagline", widget: "string" }
@@ -34,7 +34,7 @@ collections:
 
       - name: "products"
         label: "Produtos e Assinaturas"
-        file: "data/products.json"
+        file: "_data/products.json"
         fields:
           - name: "items"
             label: "Lista de Produtos"
@@ -43,17 +43,9 @@ collections:
             fields:
               - { label: "ID (número único)", name: "id", widget: "number" }
               - { label: "Nome do Produto", name: "name", widget: "string" }
-              - { label: "É um produto em destaque?", name: "featured", widget: "boolean", default: false }
               - { label: "Ícone (ex: fas fa-film)", name: "icon", widget: "string" }
               - { label: "Categoria", name: "category", widget: "string" }
               - { label: "Descrição Curta", name: "description", widget: "string" }
-              - label: "Avaliação (1 a 5)" # NOVO CAMPO
-                name: "rating"
-                widget: "number"
-                value_type: "int"
-                min: 1
-                max: 5
-                default: 4
               - label: "Variações do Produto (planos)"
                 name: "variations"
                 widget: "list"
@@ -68,9 +60,3 @@ collections:
                     step: 0.01
                   - { label: "Detalhes", name: "details", widget: "text" }
                   - { label: "Nota Importante", name: "important", widget: "text" }
-                  - label: "Quantidade em Estoque" # NOVO CAMPO
-                    name: "quantity"
-                    widget: "number"
-                    value_type: "int"
-                    min: 0
-                    default: 10
