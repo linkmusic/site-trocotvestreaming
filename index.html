@@ -3,228 +3,356 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Troço TV e Streaming</title>
+  <title>Carregando Loja...</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary-color: #1E90FF; --dark-bg: #121212; --card-bg: #1e1e1e;
       --text-color: #ffffff; --success-color: #25D366; --danger-color: #ff4444;
       --gray-color: #333333; --light-gray: #555555; --discount-color: #9C27B0;
-      --category-color: #FF5722;
+      --category-color: #FF5722; --telegram-color: #0088cc;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: var(--dark-bg); color: var(--text-color); font-family: 'Segoe UI', sans-serif; line-height: 1.6; padding-top: 80px; padding-bottom: 100px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--dark-bg); color: var(--text-color); font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding-top: 80px; padding-bottom: 100px; }
     .container { max-width: 800px; margin: 0 auto; padding: 0 1rem; }
-    .floating-cart { position: fixed; top: 0; left: 0; right: 0; background: var(--card-bg); padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary-color); }
+    .floating-cart { position: fixed; top: 0; left: 0; right: 0; background: var(--card-bg); padding: 1rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary-color); }
     .cart-summary { display: flex; align-items: center; gap: 1rem; }
     .cart-toggle { background: var(--primary-color); color: black; border: none; padding: 0.5rem 1rem; border-radius: 30px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; }
     .cart-count { background: black; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-    .cart-dropdown { position: absolute; top: 100%; right: 1rem; background: var(--card-bg); width: 350px; max-height: 70vh; overflow-y: auto; border-radius: 0 0 10px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 1rem; display: none; }
+    .cart-dropdown { position: absolute; top: 100%; right: 1rem; background: var(--card-bg); width: 350px; max-height: 70vh; overflow-y: auto; border-radius: 0 0 10px 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); padding: 1rem; display: none; }
     .cart-dropdown.show { display: block; animation: fadeIn 0.3s ease; }
-    .cart-item { margin: 0.5rem 0; padding: 0.8rem; background: var(--dark-bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-    .empty-cart { text-align: center; padding: 1rem; color: var(--light-gray); }
-    .hidden { display: none; }
-    .btn { display: inline-block; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; text-align: center; }
-    .btn-primary { background: var(--primary-color); color: #000; }
-    .btn-success { background: var(--success-color); color: white; }
+    .coupon-container { margin: 1rem 0; display: flex; gap: 0.5rem; }
+    .coupon-input { flex: 1; padding: 0.8rem; border-radius: 5px; border: 1px solid var(--light-gray); background: var(--dark-bg); color: white; }
+    .apply-coupon { background: var(--discount-color); color: white; border: none; padding: 0 1rem; border-radius: 5px; cursor: pointer; }
+    .discount-applied { color: var(--discount-color); font-weight: bold; margin: 0.5rem 0; display: none; }
+    .cart-total { font-weight: bold; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--light-gray); }
+    .checkout-btn { width: 100%; margin-top: 1rem; padding: 0.8rem; font-size: 1rem; }
+    header { text-align: center; margin-bottom: 2rem; }
+    h1 { color: var(--primary-color); margin-bottom: 0.5rem; font-size: 2rem; }
+    h2 { margin: 1.5rem 0 1rem; font-size: 1.5rem; color: var(--primary-color); }
+    .category-tabs { display: flex; gap: 0.5rem; margin: 1rem 0; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
+    .category-tabs::-webkit-scrollbar { display: none; }
+    .category-tab { background: var(--gray-color); padding: 0.7rem 1.2rem; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-size: 0.9rem; flex-shrink: 0; }
+    .category-tab:hover { background: var(--light-gray); }
+    .category-tab.active { background: var(--category-color); color: white; font-weight: bold; }
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-    .product-card { background: var(--card-bg); padding: 1.2rem; border-radius: 10px; cursor: pointer; transition: transform 0.3s ease; border-left: 4px solid var(--primary-color); }
-    .product-card:hover { transform: translateY(-5px); }
+    .product-card { background: var(--card-bg); padding: 1.2rem; border-radius: 10px; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border-left: 4px solid var(--primary-color); }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
     .product-card i { font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary-color); }
-    .variation-btn { display: block; width: 100%; background: var(--gray-color); padding: 0.8rem; margin: 0.5rem 0; border-radius: 8px; cursor: pointer; text-align: left;}
+    .hidden { display: none; }
+    .btn { display: inline-block; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; transition: all 0.3s ease; text-align: center; }
+    .btn-primary { background: var(--primary-color); color: #000; }
+    .btn-primary:hover { background: #1a7fd9; }
+    .btn-success { background: var(--success-color); color: white; }
+    .btn-success:hover { background: #20b955; }
+    .btn-danger { background: var(--danger-color); color: white; }
+    .btn-danger:hover { background: #e63939; }
+    .back-link { color: var(--primary-color); cursor: pointer; display: inline-block; margin-top: 1rem; text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
+    .variation-btn { display: inline-block; background: var(--gray-color); padding: 0.8rem; margin: 0.5rem 0; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+    .variation-btn:hover { background: var(--light-gray); }
     .variation-btn.active { background: var(--primary-color); color: black; font-weight: bold; }
-    .top-back-link, .back-link { color: var(--primary-color); cursor: pointer; display: inline-block; margin: 1rem 0; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .cart-item { margin: 0.5rem 0; padding: 0.8rem; background: var(--dark-bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .cart-item i { cursor: pointer; color: var(--danger-color); }
+    .floating-buttons-container { position: fixed; bottom: 15px; right: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
+    .floating-button { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; position: relative; }
+    .floating-button:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); }
+    .floating-button .tooltip { position: absolute; right: 60px; background: var(--card-bg); padding: 0.5rem 1rem; border-radius: 5px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .floating-button:hover .tooltip { opacity: 1; }
+    .whatsapp-btn { background: var(--success-color); color: white; }
+    .telegram-btn { background: var(--telegram-color); color: white; }
+    .group-btn { background: var(--success-color); color: white; }
+    .checkout-btn-float { background: var(--primary-color); color: black; }
+    .empty-cart { color: var(--light-gray); font-style: italic; padding: 1rem; text-align: center; }
+    .product-detail { background: var(--card-bg); padding: 1.2rem; border-radius: 10px; margin: 1rem 0; }
+    .selected-variation { padding: 0.8rem; background: rgba(30, 144, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--primary-color); margin: 1rem 0; }
+    .quantity-control { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; }
+    .quantity-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--gray-color); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 1rem; }
+    .quantity-btn:hover { background: var(--light-gray); }
+    .quantity-input { width: 60px; text-align: center; background: var(--dark-bg); color: white; border: 1px solid var(--light-gray); border-radius: 5px; padding: 0.5rem; font-size: 1rem; }
+    .important-note { color: var(--danger-color); font-size: 0.9rem; margin-top: 0.5rem; padding: 0.5rem; background: rgba(255, 87, 34, 0.1); border-radius: 5px; }
+    .top-back-link { display: block; margin-bottom: 1rem; color: var(--primary-color); cursor: pointer; text-decoration: none; }
+    .top-back-link:hover { text-decoration: underline; }
+    .alert { position: fixed; bottom: 100px; right: 20px; padding: 1rem; border-radius: 8px; color: white; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease; }
+    .alert-success { background: var(--success-color); }
+    .alert-danger { background: var(--danger-color); }
+    @media (max-width: 768px) { body { padding-top: 70px; padding-bottom: 90px; } .product-grid { grid-template-columns: 1fr; } .cart-dropdown { width: calc(100% - 2rem); left: 1rem; right: 1rem; max-height: 60vh; } h1 { font-size: 1.6rem; } h2 { font-size: 1.3rem; } .product-card { padding: 1rem; } .product-card i { font-size: 1.6rem; } .variation-btn { padding: 0.7rem; } .quantity-btn { width: 35px; height: 35px; } .quantity-input { width: 50px; } .floating-buttons-container { bottom: 10px; right: 10px; } .floating-button { width: 45px; height: 45px; font-size: 1.1rem; } .floating-button .tooltip { font-size: 0.8rem; right: 50px; padding: 0.4rem 0.8rem; } .alert { bottom: 80px; right: 15px; font-size: 0.9rem; } }
+    @media (max-width: 480px) { .floating-cart { padding: 0.8rem; } .cart-toggle { padding: 0.4rem 0.8rem; font-size: 0.9rem; } .cart-count { width: 20px; height: 20px; font-size: 0.7rem; } .product-detail { padding: 0.8rem; } .selected-variation { padding: 0.7rem; } .checkout-btn { padding: 0.7rem; font-size: 0.9rem; } .floating-button { width: 40px; height: 40px; font-size: 1rem; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    .fade-in { animation: fadeIn 0.5s ease forwards; }
   </style>
 </head>
 <body>
-    <div class="floating-cart">
-        <div class="cart-summary">
-            <i class="fas fa-shopping-cart"></i>
-            <span>Carrinho (<span id="cart-count">0</span>)</span>
-        </div>
-        <button class="cart-toggle" onclick="toggleCart()">
-            <span>Ver Carrinho</span>
-            <div class="cart-count" id="cart-badge">0</div>
-        </button>
-        <div class="cart-dropdown" id="cartDropdown">
-            <h3>Seu Carrinho</h3>
-            <div id="cart-items"><p class="empty-cart">Seu carrinho está vazio.</p></div>
-            <div class="cart-total" style="margin-top: 1rem;">Total: <span id="cart-total">R$ 0,00</span></div>
-            <button class="btn btn-success" style="width: 100%; margin-top: 1rem;" onclick="checkout()">Finalizar Pedido</button>
-        </div>
+  <div class="floating-cart">
+    <div class="cart-summary">
+      <i class="fas fa-shopping-cart"></i>
+      <span>Carrinho (<span id="cart-count">0</span>)</span>
     </div>
-
-    <div class="container" id="main-container">
-        </div>
-
+    <button class="cart-toggle" onclick="toggleCart()">
+      <span>Ver Carrinho</span>
+      <div class="cart-count" id="cart-badge">0</div>
+    </button>
+    <div class="cart-dropdown" id="cartDropdown">
+      <h3><i class="fas fa-shopping-cart"></i> Seu Carrinho</h3>
+      <div id="cart-items"></div>
+      <div class="coupon-container">
+        <input type="text" class="coupon-input" id="couponInput" placeholder="Código de desconto">
+        <button class="apply-coupon" onclick="applyCoupon()">Aplicar</button>
+      </div>
+      <div class="discount-applied" id="discountApplied">
+        <i class="fas fa-tag"></i> Cupom aplicado: <span id="discountValue">10%</span> de desconto
+      </div>
+      <div class="cart-total">Total: <span id="cart-total">R$ 0,00</span>
+        <div id="cart-discount" style="color: var(--discount-color); display: none;">Desconto: -<span id="discount-amount">R$ 0,00</span></div>
+        <div id="cart-final-total">Total com desconto: <span id="final-total">R$ 0,00</span></div>
+      </div>
+      <button class="btn btn-success checkout-btn" onclick="checkout()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button>
+    </div>
+  </div>
+  <div class="container" id="main-container">
+    </div>
+  <div class="floating-buttons-container">
+    <div class="floating-button group-btn" onclick="openGroupWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Grupo de Clientes</span></div>
+    <div class="floating-button telegram-btn" onclick="openTelegram()"><i class="fab fa-telegram"></i><span class="tooltip">Suporte Telegram</span></div>
+    <div class="floating-button whatsapp-btn" onclick="openSupportWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Suporte WhatsApp</span></div>
+    <div class="floating-button checkout-btn-float" onclick="checkout()"><i class="fas fa-shopping-cart"></i><span class="tooltip">Finalizar Pedido</span></div>
+  </div>
+  
   <script>
+    // --- Variáveis Globais ---
     let cart = [];
-    let products = [];
-    let settings = {};
     let selectedProductId = null;
     let selectedVariationText = "";
+    let discountApplied = false;
+    let products = [];
+    let settings = {};
+    let currentCategory = 'todos';
 
-    // --- Funções Auxiliares ---
+    // --- HTML das Páginas ---
+    const homePageHTML = `
+      <div id="homePage">
+        <header>
+          <h1 id="site-title"><i class="fas fa-tv"></i> </h1>
+          <p id="site-tagline"></p>
+        </header>
+        <div class="category-tabs" id="categoryTabs"></div>
+        <div id="productsByCategory"></div>
+      </div>`;
+
+    const productDetailPageHTML = `
+      <div id="productDetail" class="hidden">
+        <a class="top-back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
+        <div class="product-detail fade-in">
+          <h2 id="productName"><i class="fas fa-info-circle"></i> Produto</h2>
+          <p id="productDescription">Descrição do produto.</p>
+          <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
+          <div id="variationsContainer"></div>
+          <div class="selected-variation"><strong>Selecionado:</strong> <span id="selectedVariation">-</span></div>
+          <div class="quantity-control">
+            <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+            <input type="number" class="quantity-input" id="productQuantity" value="1" min="1">
+            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+          </div>
+          <button class="btn btn-primary" onclick="addToCart()"><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
+        </div>
+        <a class="back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
+      </div>`;
+
+    // --- Lógica Principal ---
     function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
-    function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) cart = JSON.parse(savedCart); }
+    function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); } }
     function saveCart() { localStorage.setItem('trocoTVCart', JSON.stringify(cart)); }
+    function changeQuantity(change) { const input = document.getElementById('productQuantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }
+    function showAlert(message, type) { const alert = document.createElement("div"); alert.className = `alert alert-${type}`; alert.textContent = message; document.body.appendChild(alert); setTimeout(() => { alert.style.animation = "fadeOut 0.5s ease"; setTimeout(() => alert.remove(), 500); }, 3000); }
     function toggleCart() { document.getElementById("cartDropdown").classList.toggle("show"); }
 
-    // --- Lógica de Navegação ---
     function handleLocation() {
         const hash = window.location.hash;
         if (hash.startsWith('#produto/')) {
-            renderProductPage(parseInt(hash.split('/')[1]));
+            const productId = parseInt(hash.split('/')[1]);
+            renderProductPage(productId);
         } else {
             renderHomePage();
         }
     }
+
     function navigateToProduct(id) {
-        history.pushState({ productId: id }, '', `#produto/${id}`);
+        history.pushState({ productId: id }, `Produto ${id}`, `#produto/${id}`);
         handleLocation();
     }
+    
     function goHome() {
-        history.pushState({ productId: null }, '', window.location.pathname);
+        history.pushState({ productId: null }, 'Página Inicial', window.location.pathname + window.location.search);
         handleLocation();
     }
+
     window.addEventListener('popstate', handleLocation);
 
-    // --- Renderização da UI ---
     function renderHomePage() {
-        const container = document.getElementById('main-container');
-        container.innerHTML = `
-            <div id="homePage">
-              <header style="text-align: center; margin-bottom: 2rem;">
-                <h1 id="site-title" style="color: var(--primary-color);"></h1>
-                <p id="site-tagline"></p>
-              </header>
-              <div id="productsByCategory"></div>
-            </div>`;
-        
+        document.getElementById('main-container').innerHTML = homePageHTML + productDetailPageHTML;
         document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
         document.getElementById("site-tagline").textContent = settings.tagline;
+        renderCategories();
+        renderProducts();
+    }
+
+    function renderProductPage(id) {
+        document.getElementById('main-container').innerHTML = homePageHTML + productDetailPageHTML;
+        const product = products.find(p => p.id === id);
+        if (!product) { goHome(); return; }
+        
+        selectedProductId = id;
+        document.getElementById("productName").innerHTML = `<i class="${product.icon}"></i> ${product.name}`;
+        document.getElementById("productDescription").textContent = product.description;
+        document.getElementById("productQuantity").value = 1;
+        
+        const variationsContainer = document.getElementById("variationsContainer");
+        variationsContainer.innerHTML = product.variations.map((variation, index) => 
+            `<div class="variation-btn ${index === 0 ? 'active' : ''}" onclick="selectVariation(this, '${variation.name}')">
+                <strong>${variation.name}</strong><br><small>${formatPrice(variation.price)}</small>
+             </div>`
+        ).join('');
+        
+        if (variationsContainer.children.length > 0) {
+            selectVariation(variationsContainer.children[0], product.variations[0].name);
+        }
+        
+        document.getElementById("homePage").classList.add("hidden");
+        document.getElementById("productDetail").classList.remove("hidden");
+        window.scrollTo(0, 0);
+    }
+    
+    function renderCategories() {
+        const categoriesData = [{ id: 'todos', name: 'Todos' }, ...new Set(products.map(p => p.category))].map(cat => typeof cat === 'string' ? {id: cat, name: cat.charAt(0).toUpperCase() + cat.slice(1)} : cat);
+        const container = document.getElementById('categoryTabs');
+        container.innerHTML = categoriesData.map(category => `<div class="category-tab ${category.id === 'todos' ? 'active' : ''}" onclick="filterProducts('${category.id}')">${category.name}</div>`).join('');
+    }
+
+    function filterProducts(categoryId) {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.category-tab[onclick="filterProducts('${categoryId}')"]`).classList.add('active');
+        currentCategory = categoryId;
         renderProducts();
     }
     
     function renderProducts() {
         const container = document.getElementById('productsByCategory');
-        let content = '<div class="product-grid">';
-        products.forEach(product => {
+        container.innerHTML = '';
+        const filteredProducts = currentCategory === 'todos' ? products : products.filter(p => p.category === currentCategory);
+        if (filteredProducts.length === 0) { container.innerHTML = '<p class="empty-cart">Nenhum produto encontrado.</p>'; return; }
+        const grid = document.createElement('div');
+        grid.className = 'product-grid';
+        grid.innerHTML = filteredProducts.map(product => {
             const minPrice = Math.min(...product.variations.map(v => v.price));
-            content += `
-                <div class="product-card" onclick="navigateToProduct(${product.id})">
-                  <i class="${product.icon}"></i>
-                  <h3>${product.name}</h3>
-                  <p>${product.description}</p>
-                  <div style="margin-top: 0.5rem;"><strong>A partir de ${formatPrice(minPrice)}</strong></div>
-                </div>`;
-        });
-        content += '</div>';
-        container.innerHTML = content;
-    }
-
-    function renderProductPage(id) {
-        const product = products.find(p => p.id === id);
-        if (!product) { goHome(); return; }
-
-        selectedProductId = id;
-        const container = document.getElementById('main-container');
-        container.innerHTML = `
-            <div id="productDetail">
-              <a class="top-back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar</a>
-              <div style="background: var(--card-bg); padding: 1.2rem; border-radius: 10px; margin: 1rem 0;">
-                <h2><i class="${product.icon}"></i> ${product.name}</h2>
-                <p>${product.description}</p>
-                <h3>Opções:</h3>
-                <div id="variationsContainer"></div>
-                <button class="btn btn-primary" style="margin-top: 1rem;" onclick="addToCart()">Adicionar ao Carrinho</button>
-              </div>
-            </div>`;
-            
-        const variationsContainer = document.getElementById("variationsContainer");
-        product.variations.forEach((variation, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'variation-btn';
-            if (index === 0) {
-                btn.classList.add('active');
-                selectedVariationText = variation.name;
-            }
-            btn.innerHTML = `<strong>${variation.name}</strong><br><small>${formatPrice(variation.price)} - ${variation.details}</small>`;
-            btn.onclick = () => selectVariation(btn, variation.name);
-            variationsContainer.appendChild(btn);
-        });
-        window.scrollTo(0, 0);
+            return `<div class="product-card fade-in" onclick="navigateToProduct(${product.id})">
+                      <i class="${product.icon}"></i><h3>${product.name}</h3><p>${product.description}</p>
+                      <div style="margin-top: 0.5rem;"><span style="font-weight: bold;">A partir de ${formatPrice(minPrice)}</span></div>
+                      <small>${product.variations.length} opção${product.variations.length > 1 ? 's' : ''}</small>
+                    </div>`;
+        }).join('');
+        container.appendChild(grid);
     }
     
     function selectVariation(element, variationName) {
+        if (!element) return;
         document.querySelectorAll(".variation-btn").forEach(b => b.classList.remove("active"));
         element.classList.add("active");
         selectedVariationText = variationName;
+        const product = products.find(p => p.id === selectedProductId);
+        const variation = product.variations.find(v => v.name === variationName);
+        document.getElementById("selectedVariation").innerHTML = `
+            <div><strong>${variation.name} - ${formatPrice(variation.price)}</strong></div>
+            <div style="margin-top: 0.5rem;">${variation.details}</div>
+            <div class="important-note"><strong>Importante:</strong> ${variation.important}</div>`;
     }
 
-    // --- Lógica do Carrinho ---
     function addToCart() {
-        if (!selectedProductId || !selectedVariationText) { alert("Selecione uma opção."); return; }
+        if (!selectedProductId || !selectedVariationText) { showAlert("Selecione uma opção.", "danger"); return; }
+        const quantity = parseInt(document.getElementById('productQuantity').value) || 1;
         const product = products.find(p => p.id === selectedProductId);
         const variation = product.variations.find(v => v.name === selectedVariationText);
-        
         const existingItem = cart.find(item => item.productId === product.id && item.variation === variation.name);
-        if (existingItem) {
-            existingItem.quantity++;
-        } else {
-            cart.push({ productId: product.id, name: product.name, variation: variation.name, price: variation.price, quantity: 1, icon: product.icon });
-        }
-        saveCart();
-        updateCart();
-        alert(`${variation.name} adicionado ao carrinho!`);
+        if (existingItem) { existingItem.quantity += quantity; } 
+        else { cart.push({ id: Date.now(), productId: product.id, name: product.name, variation: variation.name, price: variation.price, quantity: quantity, icon: product.icon }); }
+        saveCart(); updateCart(); showAlert("Adicionado ao carrinho!", "success");
     }
 
+    function removeFromCart(itemId) { cart = cart.filter(item => item.id !== itemId); saveCart(); updateCart(); showAlert("Item removido.", "danger"); }
+    
     function updateCart() {
+        const cartItems = document.getElementById("cart-items");
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         document.getElementById("cart-count").textContent = totalItems;
         document.getElementById("cart-badge").textContent = totalItems;
-        
-        const cartItemsEl = document.getElementById("cart-items");
-        const cartTotalEl = document.getElementById("cart-total");
-        
-        if (cart.length === 0) {
-            cartItemsEl.innerHTML = '<p class="empty-cart">Seu carrinho está vazio.</p>';
-            cartTotalEl.textContent = formatPrice(0);
-            return;
+        if (cartItems) {
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Seu carrinho está vazio</div>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item fade-in">
+                        <div>
+                            <i class="${item.icon}"></i> <strong>${item.name}</strong> - ${item.variation}
+                            <div><strong>${formatPrice(item.price)} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}</strong></div>
+                        </div>
+                        <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button>
+                    </div>`).join('');
+            }
         }
-        
-        let content = '';
-        let total = 0;
-        cart.forEach(item => {
-            total += item.price * item.quantity;
-            content += `<div class="cart-item"><span>${item.quantity}x ${item.name} (${item.variation})</span> <span>${formatPrice(item.price * item.quantity)}</span></div>`;
-        });
-        
-        cartItemsEl.innerHTML = content;
-        cartTotalEl.textContent = formatPrice(total);
+        updateCartTotals();
+    }
+
+    function applyCoupon() {
+        const couponCode = document.getElementById("couponInput").value.trim().toUpperCase();
+        if (settings.coupon && couponCode === settings.coupon.code.toUpperCase()) { discountApplied = true; showAlert("Cupom aplicado!", "success"); } 
+        else { discountApplied = false; showAlert("Cupom inválido.", "danger"); }
+        updateCartTotals();
+    }
+    
+    function updateCartTotals() {
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
+        const total = subtotal - discount;
+        const cartTotalEl = document.getElementById("cart-total");
+        if (cartTotalEl) cartTotalEl.textContent = formatPrice(subtotal);
+        const discountAmountEl = document.getElementById("discount-amount");
+        if (discountAmountEl) discountAmountEl.textContent = formatPrice(discount);
+        const finalTotalEl = document.getElementById("final-total");
+        if(finalTotalEl) finalTotalEl.textContent = formatPrice(total);
+        const discountAppliedEl = document.getElementById("discount-applied");
+        if(discountAppliedEl) discountAppliedEl.style.display = discountApplied ? 'block' : 'none';
+        const cartDiscountEl = document.getElementById("cart-discount");
+        if(cartDiscountEl) cartDiscountEl.style.display = discountApplied ? 'block' : 'none';
     }
 
     function checkout() {
-        if (cart.length === 0) { alert("Seu carrinho está vazio."); return; }
-        let total = 0;
-        let itemsText = cart.map(item => {
-            total += item.price * item.quantity;
-            return `*${item.name} - ${item.variation}* (Qtd: ${item.quantity}) - ${formatPrice(item.price * item.quantity)}`;
-        }).join("\n\n");
-        
-        let message = `Olá, gostaria de adquirir os seguintes planos:\n\n${itemsText}\n\n*Total: ${formatPrice(total)}*\n\nAguardo as instruções.`;
-        if (settings.links?.support_whatsapp_number) {
+        if (cart.length === 0) { showAlert("Seu carrinho está vazio.", "danger"); return; }
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
+        const total = subtotal - discount;
+        let itemsText = cart.map(item => `*${item.name} - ${item.variation}*\nQuantidade: ${item.quantity}\nSubtotal: ${formatPrice(item.price * item.quantity)}`).join("\n\n");
+        let message = `Olá, gostaria de adquirir os seguintes planos:\n\n${itemsText}\n\n*Subtotal: ${formatPrice(subtotal)}*`;
+        if(discountApplied) message += `\n*Desconto: -${formatPrice(discount)}*`;
+        message += `\n*Total: ${formatPrice(total)}*\n\nPor favor, informe os próximos passos para finalizar.`;
+        if (settings.links && settings.links.support_whatsapp_number) {
             window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent(message)}`, "_blank");
         }
     }
 
-    // --- Inicialização ---
+    function openSupportWhatsApp() { if (settings.links?.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent("Olá, preciso de suporte!")}`, "_blank"); }
+    function openTelegram() { if (settings.links?.support_telegram) window.open(settings.links.support_telegram, "_blank"); }
+    function openGroupWhatsApp() { if (settings.links?.group_whatsapp) window.open(settings.links.group_whatsapp, "_blank"); }
+
     async function init() {
         try {
-            // **MUDANÇA IMPORTANTE: Carrega os dados da pasta /_data/ para manter a compatibilidade original**
-            const settingsPromise = fetch('/_data/settings.json?v=' + Date.now()).then(res => res.json());
-            const productsPromise = fetch('/_data/products.json?v=' + Date.now()).then(res => res.json());
+            const settingsPromise = fetch('/data/settings.json?v=' + new Date().getTime()).then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            });
+            const productsPromise = fetch('/data/products.json?v=' + new Date().getTime()).then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            });
             
             const [settingsResponse, productsResponse] = await Promise.all([settingsPromise, productsPromise]);
             
@@ -234,12 +362,15 @@
             document.title = settings.title || "Loja";
             
             loadCart();
-            updateCart();
             handleLocation();
+            updateCart(); // Garante que o carrinho seja atualizado com os dados carregados
 
         } catch (error) {
-            console.error("Erro ao carregar os dados:", error);
-            document.getElementById('main-container').innerHTML = `<h1 style='color: var(--danger-color); text-align: center; margin-top: 2rem;'>Erro ao carregar a loja.</h1><p style='color: var(--light-gray); text-align: center;'>Verifique se os ficheiros de dados estão na pasta _data e se foram publicados corretamente.</p>`;
+            console.error("Erro fatal ao carregar:", error);
+            const container = document.getElementById('main-container');
+            if (container) {
+              container.innerHTML = `<h1 style='color: var(--danger-color); text-align: center; margin-top: 2rem;'>Erro ao carregar a loja.</h1><p style='color: var(--light-gray); text-align: center;'>Verifique se a pasta de dados foi renomeada para "data" e se os ficheiros foram publicados corretamente.</p>`;
+            }
         }
     }
 

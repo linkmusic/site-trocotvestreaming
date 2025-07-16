@@ -14,7 +14,7 @@ collections:
     files:
       - name: "settings"
         label: "Configurações Gerais"
-        file: "_data/settings.json"
+        file: "data/settings.json"
         fields:
           - { label: "Título Principal do Site", name: "title", widget: "string" }
           - { label: "Slogan abaixo do Título", name: "tagline", widget: "string" }
@@ -34,7 +34,7 @@ collections:
 
       - name: "products"
         label: "Produtos e Assinaturas"
-        file: "_data/products.json"
+        file: "data/products.json"
         fields:
           - name: "items"
             label: "Lista de Produtos"
