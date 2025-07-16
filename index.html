@@ -78,11 +78,6 @@
     .order-summary-item { display: flex; justify-content: space-between; padding: 0.5rem 0; }
     .modal-footer { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
     .hidden { display: none; }
-    .skeleton { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-    .skeleton-card { background-color: var(--card-bg); border-radius: 12px; padding: 1.2rem; }
-    .skeleton-card-icon { height: 32px; width: 32px; margin-bottom: 1rem; background-color: var(--gray-color); border-radius: 5px; }
-    .skeleton-card-text { height: 20px; margin-bottom: 0.5rem; background-color: var(--gray-color); border-radius: 4px; }
     .btn { display: inline-block; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; transition: all 0.2s ease; text-align: center; }
     .btn-primary { background: var(--primary-color); color: #000; }
     .btn-primary:hover:not(:disabled) { background: #1a7fd9; box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3); }
@@ -143,7 +138,7 @@
   <div class="container">
     <div id="homePage">
       <header>
-        <h1 id="site-title"><i class="fas fa-tv"></i> ...</h1>
+        <h1 id="site-title"></h1>
         <p id="site-tagline"></p>
       </header>
       <div class="search-container">
@@ -167,8 +162,8 @@
     <div id="productDetail" class="hidden">
       <a class="top-back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
       <div class="product-detail fade-in">
-        <h2 id="productName"><i class="fas fa-info-circle"></i> Produto</h2>
-        <p id="productDescription">Descrição do produto.</p>
+        <h2 id="productName"></h2>
+        <p id="productDescription"></p>
         <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
         <div id="variationsContainer"></div>
         <div id="selectedVariationDetails"></div>
@@ -205,6 +200,64 @@
   <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <script>
+    // ***************************************************************
+    // INÍCIO DOS DADOS INTEGRADOS - FIM DO PROBLEMA DE CORS
+    // ***************************************************************
+
+    const settingsData = {
+      "title": "Troço TV e Streaming",
+      "tagline": "Assinaturas de streaming com os melhores preços",
+      "links": {
+        "group_whatsapp": "https://chat.whatsapp.com/Gh9TBmVNHx2GI83kxRc2yz",
+        "support_telegram": "https://t.me/suporte_trocodigital",
+        "support_whatsapp_number": "+5584981518164"
+      },
+      "coupon": {
+        "code": "DESC10",
+        "percentage": 0.1
+      }
+    };
+
+    const productsData = {
+      "items": [
+        { "id": 1, "name": "Netflix", "icon": "fas fa-film", "category": "streaming", "description": "Assinatura de Netflix com diferentes planos e durações.", "rating": 5, "variations": [
+          { "name": "Tela Privada - 07 Dias", "price": 4.99, "details": "Entrega imediata com PIN seguro.", "important": "Uso em apenas 1 aparelho.", "quantity": 15 },
+          { "name": "Tela Privada - 30 Dias", "price": 19.99, "details": "Ativação imediata.", "important": "Uso em apenas 1 aparelho.", "quantity": 8 },
+          { "name": "4K Ultra HD (Somente TV) - 30 Dias", "price": 19.99, "details": "Acesso disponível somente em TVs.", "important": "Funciona exclusivamente em TVs.", "quantity": 0 }
+        ]},
+        { "id": 2, "name": "Disney Plus", "icon": "fas fa-magic", "category": "streaming", "description": "Assinatura de Disney+ com diferentes tipos de acesso.", "rating": 4, "variations": [
+          { "name": "Compartilhado - Mensal", "price": 4.99, "details": "Perfil compartilhado.", "important": "Pode haver limitação de dispositivos.", "quantity": 10 },
+          { "name": "Privado - Mensal", "price": 8, "details": "Perfil exclusivo para você.", "important": "Uso em até 4 dispositivos.", "quantity": 10 }
+        ]},
+        { "id": 3, "name": "Prime Video", "icon": "fab fa-amazon", "category": "streaming", "description": "Assinatura do serviço de streaming da Amazon.", "rating": 4, "variations": [
+            { "name": "Compartilhada - Mensal", "price": 3.99, "details": "Conta compartilhada.", "important": "Limitação de dispositivos.", "quantity": 10 },
+            { "name": "Privada - Mensal", "price": 7.99, "details": "Conta exclusiva para você.", "important": "Maior número de dispositivos.", "quantity": 10 }
+        ]},
+        { "id": 5, "name": "Crunchyroll Premium", "icon": "fas fa-dragon", "category": "streaming", "description": "Assinatura premium do Crunchyroll para animes.", "rating": 5, "variations": [
+            { "name": "Compartilhada - Mensal", "price": 4.99, "details": "Conta compartilhada, sem anúncios.", "important": "Acesso simultâneo limitado.", "quantity": 10 },
+            { "name": "Privada - Mensal", "price": 8.99, "details": "Conta exclusiva, sem anúncios.", "important": "Acesso em múltiplos dispositivos.", "quantity": 5 }
+        ]},
+        { "id": 20, "name": "Deezer Premium", "icon": "fab fa-deezer", "category": "Música", "description": "Assinatura Premium do Deezer.", "rating": 4, "variations": [
+            { "name": "Via Link - Mensal", "price": 5.99, "details": "Ativação via link.", "important": "Acesso individual.", "quantity": 10 },
+            { "name": "Família - Mensal", "price": 11.99, "details": "Para até 6 pessoas.", "important": "Requer comprovação de residência.", "quantity": 10 }
+        ]},
+        { "id": 21, "name": "Spotify Premium Vitalício", "icon": "fab fa-spotify", "category": "Métodos Vitalícios", "description": "Método para obter Spotify Premium permanentemente.", "rating": 3, "variations": [
+            { "name": "Vitalício", "price": 9.99, "details": "Ativação permanente.", "important": "Requer configuração inicial.", "quantity": 10 }
+        ]},
+        { "id": 23, "name": "Canva Pro", "icon": "fas fa-palette", "category": "Edição", "description": "Assinatura premium do Canva para design.", "rating": 5, "variations": [
+            { "name": "Via Link - Mensal", "price": 4.99, "details": "Ativação via link exclusivo.", "important": "Suporte para configuração inicial.", "quantity": 10 }
+        ]},
+        { "id": 25, "name": "ChatGPT Plus", "icon": "fas fa-robot", "category": "Inteligência Artificial", "description": "Assinatura premium do ChatGPT com GPT-4.", "rating": 5, "variations": [
+            { "name": "Compartilhado - Mensal", "price": 19.99, "details": "Acesso compartilhado ao ChatGPT Plus.", "important": "Limite de uso simultâneo.", "quantity": 3 }
+        ]}
+      ]
+    };
+
+    // ***************************************************************
+    // FIM DOS DADOS INTEGRADOS
+    // ***************************************************************
+
+
     let cart = [], products = [], settings = {}, selectedProductId = null, selectedVariationName = "", discountApplied = false, currentCategory = 'todos';
 
     function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
@@ -225,8 +278,7 @@
         const hash = window.location.hash;
         if (hash.startsWith('#produto/')) {
             const productId = parseInt(hash.split('/')[1]);
-            if (products.length > 0) renderProductDetail(productId);
-            else document.addEventListener('productsLoaded', () => renderProductDetail(productId), { once: true });
+            renderProductDetail(productId);
         } else renderHomePage();
     }
     function navigateToProduct(id) {
@@ -240,12 +292,6 @@
         renderHomePage();
     }
 
-    function renderLoadingSkeletons() {
-        const skeletonCard = `<div class="skeleton-card skeleton"><div class="skeleton-card-icon"></div><div class="skeleton-card-text" style="width: 60%;"></div><div class="skeleton-card-text" style="width: 90%;"></div></div>`;
-        const skeletonHTML = `<div class="product-grid">${skeletonCard.repeat(3)}</div>`;
-        document.getElementById('featuredProducts').innerHTML = skeletonHTML;
-        document.getElementById('productsByCategory').innerHTML = skeletonHTML;
-    }
     function renderHomePage() { document.getElementById("homePage").classList.remove("hidden"); document.getElementById("productDetail").classList.add("hidden"); }
     function renderProductDetail(id) {
         const product = products.find(p => p.id === id);
@@ -388,27 +434,30 @@
         if (settings.links?.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent(message)}`, "_blank");
         closeCheckoutModal();
     }
+    
+    // Função de inicialização principal
+    function initPage() {
+        // Atribui os dados integrados às variáveis globais
+        settings = settingsData;
+        products = productsData.items || [];
 
-    async function initPage() {
-        renderLoadingSkeletons();
-        try {
-            const [s, p] = await Promise.all([fetch('/_data/settings.json?v=' + Date.now()).then(res => res.json()), fetch('/_data/products.json?v=' + Date.now()).then(res => res.json())]);
-            settings = s; products = p.items || [];
-            document.dispatchEvent(new Event('productsLoaded'));
-            document.title = settings.title || "Loja";
-            document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
-            document.getElementById("site-tagline").textContent = settings.tagline;
-            if(settings.coupon) document.getElementById("discountValue").textContent = `${settings.coupon.percentage * 100}%`;
-            loadData(); renderCategories(); renderAllProducts();
-            document.getElementById('searchInput').addEventListener('input', renderAllProducts);
-            document.getElementById('sortSelect').addEventListener('change', renderAllProducts);
-            window.addEventListener('popstate', handleLocation);
-            handleLocation();
-        } catch (error) {
-            console.error("Erro fatal ao carregar:", error);
-            document.querySelector('.container').innerHTML = `<h1 style='color: var(--danger-color); text-align: center;'>Ocorreu um erro ao carregar o site.<br>Por favor, use o Live Server e verifique o console para mais detalhes.</h1>`;
-        }
+        // O resto do site carrega normalmente
+        document.title = settings.title || "Loja";
+        document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
+        document.getElementById("site-tagline").textContent = settings.tagline;
+        if(settings.coupon) document.getElementById("discountValue").textContent = `${settings.coupon.percentage * 100}% de desconto`;
+        
+        loadData();
+        renderCategories();
+        renderAllProducts();
+        
+        document.getElementById('searchInput').addEventListener('input', renderAllProducts);
+        document.getElementById('sortSelect').addEventListener('change', renderAllProducts);
+        window.addEventListener('popstate', handleLocation);
+        handleLocation(); // Garante que a página correta seja exibida ao carregar
     }
+
+    // Inicia tudo quando a página carregar
     document.addEventListener("DOMContentLoaded", initPage);
   </script>
 </body>
