@@ -11,22 +11,19 @@
           "name": "Tela Privada - 07 Dias",
           "price": 4.99,
           "details": "Entrega imediata com PIN seguro | Pagamento único | Suporte completo durante 7 dias",
-          "important": "Uso permitido em apenas 1 aparelho por cliente | Validade e garantia de 7 dias",
-          "quantity": 15
+          "important": "Uso permitido em apenas 1 aparelho por cliente | Validade e garantia de 7 dias"
         },
         {
           "name": "Tela Privada - 30 Dias",
           "price": 19.99,
           "details": "Ativação imediata | Pagamento único | Suporte completo durante 30 dias",
-          "important": "Uso permitido em apenas 1 aparelho por cliente | Validade e garantia de 30 dias",
-          "quantity": 8
+          "important": "Uso permitido em apenas 1 aparelho por cliente | Validade e garantia de 30 dias"
         },
         {
           "name": "4K Ultra HD (Somente TV) - 30 Dias",
           "price": 19.99,
           "details": "Acesso disponível somente em TVs | Entrega manual | Suporte completo durante 30 dias",
-          "important": "Uso permitido em apenas 1 aparelho por cliente | Funciona exclusivamente em TVs",
-          "quantity": 0
+          "important": "Uso permitido em apenas 1 aparelho por cliente | Funciona exclusivamente em TVs"
         }
       ]
     },
@@ -41,15 +38,13 @@
           "name": "Compartilhado - Mensal",
           "price": 4.99,
           "details": "Perfil compartilhado com outros usuários | Renovação mensal | Suporte completo",
-          "important": "Pode haver limitação de dispositivos simultâneos | Validade de 30 dias",
-          "quantity": 10
+          "important": "Pode haver limitação de dispositivos simultâneos | Validade de 30 dias"
         },
         {
           "name": "Privado - Mensal",
           "price": 8,
           "details": "Perfil exclusivo para você | Renovação mensal | Suporte completo",
-          "important": "Uso em até 4 dispositivos simultâneos | Validade de 30 dias",
-          "quantity": 10
+          "important": "Uso em até 4 dispositivos simultâneos | Validade de 30 dias"
         }
       ]
     },
@@ -64,15 +59,13 @@
           "name": "Compartilhada - Mensal",
           "price": 3.99,
           "details": "Conta compartilhada com outros usuários | Renovação mensal",
-          "important": "Limitação de dispositivos simultâneos | Validade de 30 dias",
-          "quantity": 10
+          "important": "Limitação de dispositivos simultâneos | Validade de 30 dias"
         },
         {
           "name": "Privada - Mensal",
           "price": 7.99,
           "details": "Conta exclusiva para você | Renovação mensal",
-          "important": "Maior número de dispositivos simultâneos | Validade de 30 dias",
-          "quantity": 10
+          "important": "Maior número de dispositivos simultâneos | Validade de 30 dias"
         }
       ]
     },
@@ -87,15 +80,13 @@
           "name": "Compartilhada - Mensal",
           "price": 4.99,
           "details": "Conta compartilhada | Renovação mensal | Suporte completo",
-          "important": "Pode haver limitação de dispositivos simultâneos",
-          "quantity": 10
+          "important": "Pode haver limitação de dispositivos simultâneos"
         },
         {
           "name": "Privada - Mensal",
           "price": 6.99,
           "details": "Conta exclusiva | Renovação mensal | Suporte completo",
-          "important": "Mais dispositivos simultâneos | Validade de 30 dias",
-          "quantity": 10
+          "important": "Mais dispositivos simultâneos | Validade de 30 dias"
         }
       ]
     },
@@ -110,15 +101,13 @@
           "name": "Compartilhada - Mensal",
           "price": 4.99,
           "details": "Conta compartilhada | Renovação mensal | Sem anúncios",
-          "important": "Acesso simultâneo limitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso simultâneo limitado | Validade de 30 dias"
         },
         {
           "name": "Privada - Mensal",
           "price": 8.99,
           "details": "Conta exclusiva | Renovação mensal | Sem anúncios",
-          "important": "Acesso em múltiplos dispositivos | Validade de 30 dias",
-          "quantity": 5
+          "important": "Acesso em múltiplos dispositivos | Validade de 30 dias"
         }
       ]
     },
@@ -133,8 +122,7 @@
           "name": "Compartilhada - Mensal",
           "price": 15.99,
           "details": "Conta compartilhada | Renovação mensal | Catálogo completo",
-          "important": "Acesso simultâneo limitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso simultâneo limitado | Validade de 30 dias"
         }
       ]
     },
@@ -149,15 +137,13 @@
           "name": "Compartilhado - Mensal",
           "price": 7.99,
           "details": "Acesso compartilhado | Renovação mensal | Catálogo completo",
-          "important": "Acesso simultâneo limitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso simultâneo limitado | Validade de 30 dias"
         },
         {
           "name": "Privado - Mensal",
           "price": 9.99,
           "details": "Acesso exclusivo | Renovação mensal | Catálogo completo",
-          "important": "Acesso ilimitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso ilimitado | Validade de 30 dias"
         }
       ]
     },
@@ -172,15 +158,13 @@
           "name": "Compartilhada - Mensal",
           "price": 4.99,
           "details": "Conta compartilhada | Renovação mensal | Catálogo completo",
-          "important": "Acesso simultâneo limitado | Validade de 30 dias",
-          "quantity": 0
+          "important": "Acesso simultâneo limitado | Validade de 30 dias"
         },
         {
           "name": "Privada - Mensal",
           "price": 7.99,
           "details": "Conta exclusiva | Renovação mensal | Catálogo completo",
-          "important": "Acesso em múltiplos dispositivos | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso em múltiplos dispositivos | Validade de 30 dias"
         }
       ]
     },
@@ -195,15 +179,13 @@
           "name": "1 Convite no seu Email (Mensal)",
           "price": 5,
           "details": "Convite enviado para seu email | Renovação mensal",
-          "important": "Acesso individual | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso individual | Validade de 30 dias"
         },
         {
           "name": "5 Convites no seu Email (Mensal)",
           "price": 11.99,
           "details": "5 convites enviados para seu email | Renovação mensal",
-          "important": "Compartilhável com família | Validade de 30 dias",
-          "quantity": 10
+          "important": "Compartilhável com família | Validade de 30 dias"
         }
       ]
     },
@@ -218,29 +200,25 @@
           "name": "Básico - Mensal",
           "price": 2.99,
           "details": "Acesso básico | Renovação mensal | Conteúdo limitado",
-          "important": "Alguns programas podem estar indisponíveis",
-          "quantity": 10
+          "important": "Alguns programas podem estar indisponíveis"
         },
         {
           "name": "+ Canais - Mensal",
           "price": 4.99,
           "details": "Acesso a mais canais | Renovação mensal",
-          "important": "Conteúdo expandido | Validade de 30 dias",
-          "quantity": 10
+          "important": "Conteúdo expandido | Validade de 30 dias"
         },
         {
           "name": "+ Canais (Conta Completa) - Mensal",
           "price": 9.99,
           "details": "Acesso completo | Renovação mensal | Todos os canais",
-          "important": "Conteúdo completo | Validade de 30 dias",
-          "quantity": 10
+          "important": "Conteúdo completo | Validade de 30 dias"
         },
         {
           "name": "+ Canais + Telecine - Mensal",
           "price": 9.99,
           "details": "Acesso completo + Telecine | Renovação mensal",
-          "important": "Inclui filmes do Telecine | Validade de 30 dias",
-          "quantity": 10
+          "important": "Inclui filmes do Telecine | Validade de 30 dias"
         }
       ]
     },
@@ -255,22 +233,19 @@
           "name": "Básica - Mensal",
           "price": 5.99,
           "details": "Pacote básico de canais | Renovação mensal",
-          "important": "Canais limitados | Validade de 30 dias",
-          "quantity": 10
+          "important": "Canais limitados | Validade de 30 dias"
         },
         {
           "name": "+ Telecine - Mensal",
           "price": 9.99,
           "details": "Pacote básico + Telecine | Renovação mensal",
-          "important": "Inclui filmes do Telecine | Validade de 30 dias",
-          "quantity": 10
+          "important": "Inclui filmes do Telecine | Validade de 30 dias"
         },
         {
           "name": "+ Premiere - Mensal",
           "price": 9.99,
           "details": "Pacote básico + Premiere | Renovação mensal",
-          "important": "Inclui jogos ao vivo | Validade de 30 dias",
-          "quantity": 10
+          "important": "Inclui jogos ao vivo | Validade de 30 dias"
         }
       ]
     },
@@ -285,29 +260,25 @@
           "name": "+ Básica - Mensal",
           "price": 13.99,
           "details": "Pacote básico de canais | Renovação mensal",
-          "important": "Canais limitados | Validade de 30 dias",
-          "quantity": 10
+          "important": "Canais limitados | Validade de 30 dias"
         },
         {
           "name": "+ HBO - Mensal",
           "price": 17.99,
           "details": "Pacote básico + HBO | Renovação mensal",
-          "important": "Inclui séries e filmes da HBO | Validade de 30 dias",
-          "quantity": 10
+          "important": "Inclui séries e filmes da HBO | Validade de 30 dias"
         },
         {
           "name": "+ Premiere + Telecine + HBO - Mensal",
           "price": 25.99,
           "details": "Pacote completo + Premiere + Telecine + HBO | Renovação mensal",
-          "important": "Conteúdo completo | Validade de 30 dias",
-          "quantity": 10
+          "important": "Conteúdo completo | Validade de 30 dias"
         },
         {
           "name": "+ Premiere + Telecine + HBO + Paramount - Mensal",
           "price": 29.99,
           "details": "Pacote completo + todos os extras | Renovação mensal",
-          "important": "Todos os canais premium | Validade de 30 dias",
-          "quantity": 10
+          "important": "Todos os canais premium | Validade de 30 dias"
         }
       ]
     },
@@ -322,36 +293,31 @@
           "name": "Mensal",
           "price": 5.99,
           "details": "Acesso mensal | Catálogo completo",
-          "important": "Validade de 30 dias",
-          "quantity": 10
+          "important": "Validade de 30 dias"
         },
         {
           "name": "Plano Duo",
           "price": 15.99,
           "details": "Para 2 pessoas | Acesso simultâneo",
-          "important": "Validade conforme contrato",
-          "quantity": 10
+          "important": "Validade conforme contrato"
         },
         {
           "name": "Trimestral",
           "price": 15.99,
           "details": "Acesso por 3 meses | Economize",
-          "important": "Validade de 90 dias",
-          "quantity": 10
+          "important": "Validade de 90 dias"
         },
         {
           "name": "Plano Família",
           "price": 29.99,
           "details": "Para até 4 pessoas | Acesso simultâneo",
-          "important": "Validade conforme contrato",
-          "quantity": 10
+          "important": "Validade conforme contrato"
         },
         {
           "name": "Anual",
           "price": 35.99,
           "details": "Acesso por 1 ano | Melhor custo-benefício",
-          "important": "Validade de 365 dias",
-          "quantity": 10
+          "important": "Validade de 365 dias"
         }
       ]
     },
@@ -366,8 +332,7 @@
           "name": "Compartilhado - Mensal",
           "price": 9.99,
           "details": "Conta compartilhada | Renovação mensal",
-          "important": "Acesso simultâneo limitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso simultâneo limitado | Validade de 30 dias"
         }
       ]
     },
@@ -382,15 +347,13 @@
           "name": "Mensal",
           "price": 5.99,
           "details": "Acesso mensal | Catálogo completo",
-          "important": "Validade de 30 dias",
-          "quantity": 10
+          "important": "Validade de 30 dias"
         },
         {
           "name": "+ Combate - Mensal",
           "price": 9.99,
           "details": "Telecine + Combate | Renovação mensal",
-          "important": "Inclui eventos esportivos | Validade de 30 dias",
-          "quantity": 10
+          "important": "Inclui eventos esportivos | Validade de 30 dias"
         }
       ]
     },
@@ -405,8 +368,7 @@
           "name": "Mensal",
           "price": 9.99,
           "details": "Acesso mensal | Catálogo completo",
-          "important": "Validade de 30 dias",
-          "quantity": 10
+          "important": "Validade de 30 dias"
         }
       ]
     },
@@ -421,15 +383,13 @@
           "name": "Compartilhada - Mensal",
           "price": 4.99,
           "details": "Conta compartilhada | Renovação mensal",
-          "important": "Acesso simultâneo limitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso simultâneo limitado | Validade de 30 dias"
         },
         {
           "name": "Privada - Mensal",
           "price": 9.99,
           "details": "Conta exclusiva | Renovação mensal",
-          "important": "Acesso ilimitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso ilimitado | Validade de 30 dias"
         }
       ]
     },
@@ -444,15 +404,13 @@
           "name": "Compartilhada - Mensal",
           "price": 3.99,
           "details": "Conta compartilhada | Renovação mensal",
-          "important": "Acesso simultâneo limitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso simultâneo limitado | Validade de 30 dias"
         },
         {
           "name": "Privada - Mensal",
           "price": 4.99,
           "details": "Conta exclusiva | Renovação mensal",
-          "important": "Acesso ilimitado | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso ilimitado | Validade de 30 dias"
         }
       ]
     },
@@ -467,8 +425,7 @@
           "name": "Mensal",
           "price": 9.99,
           "details": "Acesso mensal | Catálogo completo",
-          "important": "Validade de 30 dias",
-          "quantity": 10
+          "important": "Validade de 30 dias"
         }
       ]
     },
@@ -483,29 +440,25 @@
           "name": "Via Link - Mensal",
           "price": 5.99,
           "details": "Ativação via link | Renovação mensal | Qualidade de áudio alta",
-          "important": "Acesso individual | Validade de 30 dias",
-          "quantity": 10
+          "important": "Acesso individual | Validade de 30 dias"
         },
         {
           "name": "No seu Email - Mensal",
           "price": 7.99,
           "details": "Conta criada no seu email | Renovação mensal | Qualidade HiFi",
-          "important": "Acesso individual | Dados pessoais protegidos",
-          "quantity": 10
+          "important": "Acesso individual | Dados pessoais protegidos"
         },
         {
           "name": "Família - Mensal",
           "price": 11.99,
           "details": "Para até 6 pessoas | Contas individuais | Renovação mensal",
-          "important": "Requer comprovação de residência | Economia para família",
-          "quantity": 10
+          "important": "Requer comprovação de residência | Economia para família"
         },
         {
           "name": "Duo - Mensal",
           "price": 9.99,
           "details": "Para 2 pessoas | Contas individuais | Renovação mensal",
-          "important": "Ideal para casais | Economia compartilhada",
-          "quantity": 10
+          "important": "Ideal para casais | Economia compartilhada"
         }
       ]
     },
@@ -520,8 +473,7 @@
           "name": "Vitalício",
           "price": 9.99,
           "details": "Ativação permanente | Sem renovação mensal | Tutorial completo incluído",
-          "important": "Requer configuração inicial | Suporte por 30 dias | Método não convencional",
-          "quantity": 10
+          "important": "Requer configuração inicial | Suporte por 30 dias | Método não convencional"
         }
       ]
     },
@@ -536,8 +488,7 @@
           "name": "Vitalício",
           "price": 9.99,
           "details": "Acesso vitalício | Sem renovação | Tutorial passo-a-passo",
-          "important": "Pode requerer configurações específicas | Suporte limitado a 30 dias",
-          "quantity": 10
+          "important": "Pode requerer configurações específicas | Suporte limitado a 30 dias"
         }
       ]
     },
@@ -552,8 +503,7 @@
           "name": "Via Link - Mensal",
           "price": 4.99,
           "details": "Ativação via link exclusivo | Acesso a todos os recursos Pro | Templates premium",
-          "important": "Renovação mensal | Suporte para configuração inicial",
-          "quantity": 10
+          "important": "Renovação mensal | Suporte para configuração inicial"
         }
       ]
     },
@@ -568,8 +518,7 @@
           "name": "Compartilhado - Mensal",
           "price": 9.99,
           "details": "Conta compartilhada | Efeitos exclusivos Pro | Sem marca d'água",
-          "important": "Acesso simultâneo limitado | Renovação mensal",
-          "quantity": 10
+          "important": "Acesso simultâneo limitado | Renovação mensal"
         }
       ]
     },
@@ -584,8 +533,7 @@
           "name": "Compartilhado - Mensal",
           "price": 19.99,
           "details": "Acesso compartilhado ao ChatGPT Plus | GPT-4 disponível | Respostas prioritárias",
-          "important": "Limite de uso simultâneo | Renovação mensal | Suporte 24h",
-          "quantity": 3
+          "important": "Limite de uso simultâneo | Renovação mensal | Suporte 24h"
         }
       ]
     },
@@ -600,8 +548,7 @@
           "name": "Convite de Acesso",
           "price": 9.99,
           "details": "Acesso a Veo 3 e Gemini Pro | Tecnologia de ponta em IA | Convite exclusivo",
-          "important": "Ativação imediata | Suporte para configuração | Acesso vitalício",
-          "quantity": 10
+          "important": "Ativação imediata | Suporte para configuração | Acesso vitalício"
         }
       ]
     }

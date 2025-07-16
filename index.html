@@ -3,451 +3,332 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carregando Loja...</title>
+  <title>Troço TV e Streaming - Assinaturas de Streaming</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary-color: #1E90FF; --dark-bg: #0f0f0f; --card-bg: #1a1a1a;
-      --text-color: #f0f0f0; --success-color: #25D366; --danger-color: #ff4444;
-      --gray-color: #282828; --light-gray: #555555; --accent-color: #8A2BE2;
-      --category-color: #FF5722; --telegram-color: #0088cc; --featured-color: #FFD700;
-      --star-color: #FFD700;
+      --primary-color: #1E90FF;
+      --dark-bg: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #ffffff;
+      --success-color: #25D366;
+      --danger-color: #ff4444;
+      --gray-color: #333333;
+      --light-gray: #555555;
+      --discount-color: #9C27B0;
+      --category-color: #FF5722;
+      --telegram-color: #0088cc;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html { scroll-behavior: smooth; }
-    body { background-color: var(--dark-bg); color: var(--text-color); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; padding-top: 90px; padding-bottom: 100px; transition: background-color 0.3s ease; }
+    body { background-color: var(--dark-bg); color: var(--text-color); font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding-top: 80px; padding-bottom: 100px; }
     .container { max-width: 800px; margin: 0 auto; padding: 0 1rem; }
-    .floating-cart { position: fixed; top: 0; left: 0; right: 0; padding: 1rem; z-index: 1000; display: flex; justify-content: space-between; align-items: center; background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
-    .cart-summary { display: flex; align-items: center; gap: 1rem; cursor: pointer; }
-    .cart-summary i { transition: transform 0.3s ease; }
-    .cart-summary.shake i { animation: shake 0.5s ease; }
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
-    .cart-toggle { background: var(--primary-color); color: black; border: none; padding: 0.5rem 1rem; border-radius: 30px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .cart-toggle:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3); }
-    .cart-toggle:active { transform: scale(0.98); }
+    .floating-cart { position: fixed; top: 0; left: 0; right: 0; background: var(--card-bg); padding: 1rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary-color); }
+    .cart-summary { display: flex; align-items: center; gap: 1rem; }
+    .cart-toggle { background: var(--primary-color); color: black; border: none; padding: 0.5rem 1rem; border-radius: 30px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; }
     .cart-count { background: black; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-    .cart-dropdown { position: absolute; top: 100%; right: 1rem; background: var(--card-bg); width: 350px; max-height: 70vh; overflow-y: auto; border-radius: 0 0 10px 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); padding: 1.2rem; display: none; border: 1px solid rgba(255, 255, 255, 0.1); }
-    .cart-dropdown.show { display: block; animation: fadeInDown 0.4s ease-out; }
-    .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .clear-cart-btn { background: none; border: none; color: var(--light-gray); cursor: pointer; font-size: 0.8rem; }
-    .clear-cart-btn:hover { color: var(--danger-color); }
+    .cart-dropdown { position: absolute; top: 100%; right: 1rem; background: var(--card-bg); width: 350px; max-height: 70vh; overflow-y: auto; border-radius: 0 0 10px 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); padding: 1rem; display: none; }
+    .cart-dropdown.show { display: block; animation: fadeIn 0.3s ease; }
     .coupon-container { margin: 1rem 0; display: flex; gap: 0.5rem; }
     .coupon-input { flex: 1; padding: 0.8rem; border-radius: 5px; border: 1px solid var(--light-gray); background: var(--dark-bg); color: white; }
-    .apply-coupon { background: var(--accent-color); color: white; border: none; padding: 0 1rem; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
-    .apply-coupon:hover { background: #7121c4; }
-    .discount-applied { color: var(--accent-color); font-weight: bold; margin: 0.5rem 0; display: none; }
+    .apply-coupon { background: var(--discount-color); color: white; border: none; padding: 0 1rem; border-radius: 5px; cursor: pointer; }
+    .discount-applied { color: var(--discount-color); font-weight: bold; margin: 0.5rem 0; display: none; }
     .cart-total { font-weight: bold; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--light-gray); }
     .checkout-btn { width: 100%; margin-top: 1rem; padding: 0.8rem; font-size: 1rem; }
     header { text-align: center; margin-bottom: 2rem; }
-    h1 { color: var(--primary-color); margin-bottom: 0.5rem; font-size: 2.2rem; font-weight: 700; }
-    h2.section-title { border-left: 4px solid var(--primary-color); padding-left: 1rem; text-align: left; font-weight: 600; margin: 2rem 0 1rem; }
-    h2.featured-title { border-left-color: var(--featured-color); color: var(--featured-color); }
-    .search-container { margin: 2rem 0; position: relative; }
-    .search-input { width: 100%; padding: 1rem 1rem 1rem 3rem; background: var(--card-bg); border: 1px solid var(--light-gray); border-radius: 30px; color: var(--text-color); font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; }
-    .search-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.2); outline: none; }
-    .search-container::before { content: '🔎'; position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--light-gray); }
-    .product-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .category-tabs { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; flex-grow: 1; }
+    h1 { color: var(--primary-color); margin-bottom: 0.5rem; font-size: 2rem; }
+    h2 { margin: 1.5rem 0 1rem; font-size: 1.5rem; color: var(--primary-color); }
+    .category-tabs { display: flex; gap: 0.5rem; margin: 1rem 0; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
     .category-tabs::-webkit-scrollbar { display: none; }
-    .category-tab { background: var(--gray-color); padding: 0.7rem 1.2rem; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-size: 0.9rem; flex-shrink: 0; border: 1px solid transparent; }
+    .category-tab { background: var(--gray-color); padding: 0.7rem 1.2rem; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-size: 0.9rem; flex-shrink: 0; }
     .category-tab:hover { background: var(--light-gray); }
-    .category-tab.active { background: var(--category-color); color: white; font-weight: bold; box-shadow: 0 2px 10px rgba(255, 87, 34, 0.3); }
-    .sort-container { position: relative; }
-    .sort-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-color: var(--gray-color); border: 1px solid var(--light-gray); color: var(--text-color); padding: 0.5rem 2rem 0.5rem 1rem; border-radius: 20px; cursor: pointer; }
-    .sort-container::after { content: '▼'; font-size: 0.8rem; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none; }
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
-    .product-card { background: var(--card-bg); padding: 1.2rem; border-radius: 12px; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; }
-    .product-card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); }
-    .product-card.is-featured { border-color: var(--featured-color); }
-    .product-card.is-featured::before { content: '★'; position: absolute; top: 10px; right: 10px; color: var(--featured-color); font-size: 1.2rem; }
-    .product-card i.product-icon { font-size: 2rem; margin-bottom: 1rem; color: var(--primary-color); transition: color 0.3s ease; }
-    .product-card:hover i.product-icon { color: var(--text-color); }
-    .product-rating { color: var(--star-color); margin: 0.5rem 0; font-size: 0.9rem; }
-    .product-rating .far { color: var(--light-gray); }
-    .sold-out-badge { position: absolute; top: 10px; left: -40px; background-color: var(--danger-color); color: white; padding: 5px 40px; transform: rotate(-45deg); font-size: 0.8rem; font-weight: bold; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-    .variation-btn.is-sold-out { cursor: not-allowed; background-color: #2a2a2a; color: #666; text-decoration: line-through; }
-    .btn:disabled { background: var(--gray-color) !important; color: var(--light-gray) !important; cursor: not-allowed !important; transform: scale(1) !important; }
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-    .modal-overlay.show { opacity: 1; pointer-events: all; }
-    .modal-content { background: var(--card-bg); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: scale(0.95); transition: transform 0.3s ease; }
-    .modal-overlay.show .modal-content { transform: scale(1); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--light-gray); padding-bottom: 1rem; }
-    .modal-header h3 { color: var(--primary-color); }
-    .modal-close { background: none; border: none; font-size: 1.5rem; color: var(--light-gray); cursor: pointer; }
-    .modal-body { max-height: 50vh; overflow-y: auto; }
-    .order-summary-item { display: flex; justify-content: space-between; padding: 0.5rem 0; }
-    .modal-footer { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
+    .category-tab.active { background: var(--category-color); color: white; font-weight: bold; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .product-card { background: var(--card-bg); padding: 1.2rem; border-radius: 10px; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; border-left: 4px solid var(--primary-color); }
+    .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+    .product-card i { font-size: 1.8rem; margin-bottom: 1rem; color: var(--primary-color); }
     .hidden { display: none; }
-    .btn { display: inline-block; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; transition: all 0.2s ease; text-align: center; }
+    .btn { display: inline-block; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; transition: all 0.3s ease; text-align: center; }
     .btn-primary { background: var(--primary-color); color: #000; }
-    .btn-primary:hover:not(:disabled) { background: #1a7fd9; box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3); }
-    .btn:active:not(:disabled) { transform: scale(0.97); }
+    .btn-primary:hover { background: #1a7fd9; }
+    .btn-success { background: var(--success-color); color: white; }
+    .btn-success:hover { background: #20b955; }
+    .btn-danger { background: var(--danger-color); color: white; }
+    .btn-danger:hover { background: #e63939; }
     .back-link { color: var(--primary-color); cursor: pointer; display: inline-block; margin-top: 1rem; text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
     .variation-btn { display: inline-block; background: var(--gray-color); padding: 0.8rem; margin: 0.5rem 0; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; width: 100%; }
-    .variation-btn:hover:not(.is-sold-out) { background: var(--light-gray); }
+    .variation-btn:hover { background: var(--light-gray); }
     .variation-btn.active { background: var(--primary-color); color: black; font-weight: bold; }
     .cart-item { margin: 0.5rem 0; padding: 0.8rem; background: var(--dark-bg); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .cart-item i { cursor: pointer; color: var(--danger-color); }
     .floating-buttons-container { position: fixed; bottom: 15px; right: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
     .floating-button { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; position: relative; }
     .floating-button:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); }
-    .floating-button .tooltip { position: absolute; right: 60px; background: var(--card-bg); padding: 0.5rem 1rem; border-radius: 5px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+    .floating-button .tooltip { position: absolute; right: 60px; background: var(--card-bg); padding: 0.5rem 1rem; border-radius: 5px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     .floating-button:hover .tooltip { opacity: 1; }
-    .empty-cart { color: var(--light-gray); font-style: italic; padding: 2rem 1rem; text-align: center; background-color: var(--card-bg); border-radius: 10px; margin-top: 1.5rem; }
+    .whatsapp-btn { background: var(--success-color); color: white; }
+    .telegram-btn { background: var(--telegram-color); color: white; }
+    .group-btn { background: var(--success-color); color: white; }
+    .checkout-btn-float { background: var(--primary-color); color: black; }
+    .empty-cart { color: var(--light-gray); font-style: italic; padding: 1rem; text-align: center; }
     .product-detail { background: var(--card-bg); padding: 1.2rem; border-radius: 10px; margin: 1rem 0; }
     .selected-variation { padding: 0.8rem; background: rgba(30, 144, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--primary-color); margin: 1rem 0; }
     .quantity-control { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; }
     .quantity-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--gray-color); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 1rem; }
+    .quantity-btn:hover { background: var(--light-gray); }
     .quantity-input { width: 60px; text-align: center; background: var(--dark-bg); color: white; border: 1px solid var(--light-gray); border-radius: 5px; padding: 0.5rem; font-size: 1rem; }
     .important-note { color: var(--danger-color); font-size: 0.9rem; margin-top: 0.5rem; padding: 0.5rem; background: rgba(255, 87, 34, 0.1); border-radius: 5px; }
-    .alert { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 1rem 1.5rem; border-radius: 8px; color: white; z-index: 3000; box-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: fadeInUp 0.5s ease forwards; }
+    .top-back-link { display: block; margin-bottom: 1rem; color: var(--primary-color); cursor: pointer; text-decoration: none; }
+    .top-back-link:hover { text-decoration: underline; }
+    .alert { position: fixed; bottom: 100px; right: 20px; padding: 1rem; border-radius: 8px; color: white; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease; }
     .alert-success { background: var(--success-color); }
     .alert-danger { background: var(--danger-color); }
-    @keyframes fadeInUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
-    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) { body { padding-top: 70px; padding-bottom: 90px; } .product-grid { grid-template-columns: 1fr; } .cart-dropdown { width: calc(100% - 2rem); left: 1rem; right: 1rem; max-height: 60vh; } h1 { font-size: 1.6rem; } h2 { font-size: 1.3rem; } .product-card { padding: 1rem; } .product-card i { font-size: 1.6rem; } .variation-btn { padding: 0.7rem; } .quantity-btn { width: 35px; height: 35px; } .quantity-input { width: 50px; } .floating-buttons-container { bottom: 10px; right: 10px; } .floating-button { width: 45px; height: 45px; font-size: 1.1rem; } .floating-button .tooltip { font-size: 0.8rem; right: 50px; padding: 0.4rem 0.8rem; } .alert { bottom: 80px; right: 15px; font-size: 0.9rem; } }
+    @media (max-width: 480px) { .floating-cart { padding: 0.8rem; } .cart-toggle { padding: 0.4rem 0.8rem; font-size: 0.9rem; } .cart-count { width: 20px; height: 20px; font-size: 0.7rem; } .product-detail { padding: 0.8rem; } .selected-variation { padding: 0.7rem; } .checkout-btn { padding: 0.7rem; font-size: 0.9rem; } .floating-button { width: 40px; height: 40px; font-size: 1rem; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    .fade-in { animation: fadeIn 0.5s ease forwards; }
   </style>
 </head>
 <body>
   <div class="floating-cart">
-    <div class="cart-summary" onclick="toggleCart()" title="Ver carrinho">
-      <i id="cart-icon" class="fas fa-shopping-cart"></i>
+    <div class="cart-summary">
+      <i class="fas fa-shopping-cart"></i>
       <span>Carrinho (<span id="cart-count">0</span>)</span>
     </div>
-    <button class="cart-toggle" onclick="toggleCart()">Ver Carrinho</button>
+    <button class="cart-toggle" onclick="toggleCart()">
+      <span>Ver Carrinho</span>
+      <div class="cart-count" id="cart-badge">0</div>
+    </button>
     <div class="cart-dropdown" id="cartDropdown">
-      <div class="cart-header">
-        <h3><i class="fas fa-shopping-cart"></i> Seu Carrinho</h3>
-        <button class="clear-cart-btn" onclick="clearCart()">Esvaziar <i class="fas fa-trash"></i></button>
-      </div>
+      <h3><i class="fas fa-shopping-cart"></i> Seu Carrinho</h3>
       <div id="cart-items"></div>
       <div class="coupon-container">
         <input type="text" class="coupon-input" id="couponInput" placeholder="Código de desconto">
         <button class="apply-coupon" onclick="applyCoupon()">Aplicar</button>
       </div>
       <div class="discount-applied" id="discountApplied">
-        <i class="fas fa-tag"></i> Cupom aplicado: <span id="discountValue"></span>
+        <i class="fas fa-tag"></i> Cupom aplicado: <span id="discountValue">10%</span> de desconto
       </div>
-      <div class="cart-total">
-        <div>Subtotal: <span id="cart-subtotal">R$ 0,00</span></div>
-        <div id="cart-discount" style="color: var(--accent-color); display: none;">Desconto: -<span id="discount-amount">R$ 0,00</span></div>
-        <div style="font-weight: bold; font-size: 1.1rem; margin-top: 0.5rem;">Total: <span id="cart-final-total">R$ 0,00</span></div>
+      <div class="cart-total">Total: <span id="cart-total">R$ 0,00</span>
+        <div id="cart-discount" style="color: var(--discount-color); display: none;">Desconto: -<span id="discount-amount">R$ 0,00</span></div>
+        <div id="cart-final-total">Total com desconto: <span id="final-total">R$ 0,00</span></div>
       </div>
-      <button class="btn btn-success checkout-btn" onclick="showCheckoutModal()"><i class="fas fa-check"></i> Ir para o Resumo</button>
+      <button class="btn btn-success checkout-btn" onclick="checkout()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button>
     </div>
   </div>
-
-  <div class="container" id="main-container">
+  <div class="container">
+    <div id="homePage">
+      <header>
+        <h1 id="site-title"><i class="fas fa-tv"></i> </h1>
+        <p id="site-tagline"></p>
+      </header>
+      <div class="category-tabs" id="categoryTabs"></div>
+      <div id="productsByCategory"></div>
     </div>
-
-  <div class="modal-overlay" id="checkoutModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Resumo do Pedido</h3>
-        <button class="modal-close" onclick="closeCheckoutModal()">✖</button>
+    <div id="productDetail" class="hidden">
+      <a class="top-back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
+      <div class="product-detail fade-in">
+        <h2 id="productName"><i class="fas fa-info-circle"></i> Produto</h2>
+        <p id="productDescription">Descrição do produto.</p>
+        <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
+        <div id="variationsContainer"></div>
+        <div class="selected-variation"><strong>Selecionado:</strong> <span id="selectedVariation">-</span></div>
+        <div class="quantity-control">
+          <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+          <input type="number" class="quantity-input" id="productQuantity" value="1" min="1">
+          <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+        </div>
+        <button class="btn btn-primary" onclick="addToCart()"><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
       </div>
-      <div class="modal-body" id="modalOrderSummary"></div>
-      <div class="modal-footer">
-        <button class="btn" style="background: var(--gray-color);" onclick="closeCheckoutModal()">Cancelar</button>
-        <button class="btn btn-success" onclick="confirmCheckout()"><i class="fab fa-whatsapp"></i> Confirmar e Enviar</button>
-      </div>
+      <a class="back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
     </div>
+  </div>
+  <div class="floating-buttons-container">
+    <div class="floating-button group-btn" onclick="openGroupWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Grupo de Clientes</span></div>
+    <div class="floating-button telegram-btn" onclick="openTelegram()"><i class="fab fa-telegram"></i><span class="tooltip">Suporte Telegram</span></div>
+    <div class="floating-button whatsapp-btn" onclick="openSupportWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Suporte WhatsApp</span></div>
+    <div class="floating-button checkout-btn-float" onclick="checkout()"><i class="fas fa-shopping-cart"></i><span class="tooltip">Finalizar Pedido</span></div>
   </div>
   
+  <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
   <script>
-    // ***************************************************************
-    // INÍCIO DOS DADOS INTEGRADOS - SOLUÇÃO DEFINITIVA
-    // ***************************************************************
-
-    const siteData = {
-      settings: {
-        "title": "Troço TV e Streaming",
-        "tagline": "Assinaturas de streaming com os melhores preços",
-        "links": {
-          "group_whatsapp": "https://chat.whatsapp.com/Gh9TBmVNHx2GI83kxRc2yz",
-          "support_telegram": "https://t.me/suporte_trocodigital",
-          "support_whatsapp_number": "+5584981518164"
-        },
-        "coupon": {
-          "code": "DESC10",
-          "percentage": 0.1
-        }
-      },
-      products: [
-        { "id": 1, "name": "Netflix", "icon": "fas fa-film", "category": "streaming", "description": "Assinatura de Netflix com diferentes planos e durações.", "rating": 5, "variations": [
-          { "name": "Tela Privada - 07 Dias", "price": 4.99, "details": "Entrega imediata com PIN seguro.", "important": "Uso em apenas 1 aparelho.", "quantity": 15 },
-          { "name": "Tela Privada - 30 Dias", "price": 19.99, "details": "Ativação imediata.", "important": "Uso em apenas 1 aparelho.", "quantity": 8 },
-          { "name": "4K Ultra HD (Somente TV) - 30 Dias", "price": 19.99, "details": "Acesso disponível somente em TVs.", "important": "Funciona exclusivamente em TVs.", "quantity": 0 }
-        ]},
-        { "id": 2, "name": "Disney Plus", "icon": "fas fa-magic", "category": "streaming", "description": "Assinatura de Disney+.", "rating": 4, "variations": [
-          { "name": "Compartilhado - Mensal", "price": 4.99, "details": "Perfil compartilhado.", "important": "Pode haver limitação de dispositivos.", "quantity": 10 },
-          { "name": "Privado - Mensal", "price": 8, "details": "Perfil exclusivo para você.", "important": "Uso em até 4 dispositivos.", "quantity": 10 }
-        ]},
-        { "id": 3, "name": "Prime Video", "icon": "fab fa-amazon", "category": "streaming", "description": "Assinatura do serviço de streaming da Amazon.", "rating": 4, "variations": [
-            { "name": "Compartilhada - Mensal", "price": 3.99, "details": "Conta compartilhada.", "important": "Limitação de dispositivos.", "quantity": 10 },
-            { "name": "Privada - Mensal", "price": 7.99, "details": "Conta exclusiva para você.", "important": "Maior número de dispositivos.", "quantity": 10 }
-        ]},
-        { "id": 5, "name": "Crunchyroll Premium", "icon": "fas fa-dragon", "category": "streaming", "description": "Assinatura premium do Crunchyroll para animes.", "rating": 5, "variations": [
-            { "name": "Compartilhada - Mensal", "price": 4.99, "details": "Conta compartilhada, sem anúncios.", "important": "Acesso simultâneo limitado.", "quantity": 10 },
-            { "name": "Privada - Mensal", "price": 8.99, "details": "Conta exclusiva, sem anúncios.", "important": "Acesso em múltiplos dispositivos.", "quantity": 5 }
-        ]},
-        { "id": 20, "name": "Deezer Premium", "icon": "fab fa-deezer", "category": "Música", "description": "Assinatura Premium do Deezer.", "rating": 4, "variations": [
-            { "name": "Via Link - Mensal", "price": 5.99, "details": "Ativação via link.", "important": "Acesso individual.", "quantity": 10 },
-            { "name": "Família - Mensal", "price": 11.99, "details": "Para até 6 pessoas.", "important": "Requer comprovação de residência.", "quantity": 10 }
-        ]},
-        { "id": 21, "name": "Spotify Premium Vitalício", "icon": "fab fa-spotify", "category": "Métodos Vitalícios", "description": "Método para obter Spotify Premium permanentemente.", "rating": 3, "variations": [
-            { "name": "Vitalício", "price": 9.99, "details": "Ativação permanente.", "important": "Requer configuração inicial.", "quantity": 10 }
-        ]},
-        { "id": 23, "name": "Canva Pro", "icon": "fas fa-palette", "category": "Edição", "description": "Assinatura premium do Canva para design.", "rating": 5, "variations": [
-            { "name": "Via Link - Mensal", "price": 4.99, "details": "Ativação via link exclusivo.", "important": "Suporte para configuração inicial.", "quantity": 10 }
-        ]},
-        { "id": 25, "name": "ChatGPT Plus", "icon": "fas fa-robot", "category": "Inteligência Artificial", "description": "Assinatura premium do ChatGPT com GPT-4.", "rating": 5, "variations": [
-            { "name": "Compartilhado - Mensal", "price": 19.99, "details": "Acesso compartilhado ao ChatGPT Plus.", "important": "Limite de uso simultâneo.", "quantity": 3 }
-        ]}
-      ]
-    };
-
-    // ***************************************************************
-    // FIM DOS DADOS INTEGRADOS
-    // ***************************************************************
-
-    let cart = [], products = [], settings = {}, selectedProductId = null, selectedVariationName = "", discountApplied = false, currentCategory = 'todos';
-
+    let cart = [];
+    let selectedProductId = null;
+    let selectedVariationText = "";
+    let discountApplied = false;
+    let products = [];
+    let settings = {};
+    let currentCategory = 'todos';
+    
+    // --- Funções de Renderização e Lógica ---
     function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
-    function loadData() {
-        const savedCart = localStorage.getItem('trocoTVCart');
-        if (savedCart) cart = JSON.parse(savedCart);
-        currentCategory = localStorage.getItem('trocoTVCategory') || 'todos';
-        updateCart();
-    }
-    function saveData() {
-        localStorage.setItem('trocoTVCart', JSON.stringify(cart));
-        localStorage.setItem('trocoTVCategory', currentCategory);
-    }
-    function showAlert(message, type) { const el = document.createElement("div"); el.className = `alert alert-${type}`; el.textContent = message; document.body.appendChild(el); setTimeout(() => { el.style.animation = "fadeOut 0.5s ease forwards"; setTimeout(() => el.remove(), 500); }, 3000); }
+    function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); updateCart(); } }
+    function saveCart() { localStorage.setItem('trocoTVCart', JSON.stringify(cart)); }
+    function changeQuantity(change) { const input = document.getElementById('productQuantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }
+    function showAlert(message, type) { const alert = document.createElement("div"); alert.className = `alert alert-${type}`; alert.textContent = message; document.body.appendChild(alert); setTimeout(() => { alert.style.animation = "fadeOut 0.5s ease"; setTimeout(() => alert.remove(), 500); }, 3000); }
+    function goHome() { document.getElementById("homePage").classList.remove("hidden"); document.getElementById("productDetail").classList.add("hidden"); }
     function toggleCart() { document.getElementById("cartDropdown").classList.toggle("show"); }
 
-    function handleLocation() {
-        const hash = window.location.hash;
-        if (hash.startsWith('#produto/')) renderProductDetail(parseInt(hash.split('/')[1]));
-        else renderHomePage();
-    }
-    function navigateToProduct(id) {
-        const product = products.find(p => p.id === id);
-        if (product && product.variations.every(v => v.quantity === 0)) { showAlert('Este produto está totalmente esgotado.', 'danger'); return; }
-        history.pushState({ page: 'product', productId: id }, `Produto ${id}`, `#produto/${id}`);
-        renderProductDetail(id);
-    }
-    function goHome() {
-        history.pushState({ page: 'home' }, 'Página Inicial', window.location.pathname);
-        renderHomePage();
+    function renderCategories() {
+        const categoriesData = [{ id: 'todos', name: 'Todos' }, ...new Set(products.map(p => p.category))].map(cat => typeof cat === 'string' ? {id: cat, name: cat.charAt(0).toUpperCase() + cat.slice(1)} : cat);
+        const container = document.getElementById('categoryTabs');
+        container.innerHTML = categoriesData.map(category => `<div class="category-tab ${category.id === 'todos' ? 'active' : ''}" onclick="filterProducts('${category.id}')">${category.name}</div>`).join('');
     }
 
-    function renderHomePage() { 
-        const container = document.getElementById('main-container');
-        container.innerHTML = `
-            <div id="homePage">
-              <header>
-                <h1 id="site-title"></h1>
-                <p id="site-tagline"></p>
-              </header>
-              <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por um produto...">
-              </div>
-              <div class="product-actions">
-                <div class="category-tabs" id="categoryTabs"></div>
-                <div class="sort-container">
-                    <select id="sortSelect" class="sort-select">
-                        <option value="default">Ordenar por</option>
-                        <option value="price_asc">Preço: Menor para Maior</option>
-                        <option value="price_desc">Preço: Maior para Menor</option>
-                        <option value="name_asc">Nome: A-Z</option>
-                        <option value="name_desc">Nome: Z-A</option>
-                    </select>
-                </div>
-              </div>
-              <div id="featuredProducts"></div>
-              <div id="productsByCategory"></div>
-            </div>`;
-        document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
-        document.getElementById("site-tagline").textContent = settings.tagline;
-        renderCategories();
-        renderAllProducts();
-        document.getElementById('searchInput').addEventListener('input', renderAllProducts);
-        document.getElementById('sortSelect').addEventListener('change', renderAllProducts);
+    function filterProducts(categoryId) {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.category-tab[onclick="filterProducts('${categoryId}')"]`).classList.add('active');
+        currentCategory = categoryId;
+        renderProducts();
     }
     
-    function renderProductDetail(id) {
+    function renderProducts() {
+        const container = document.getElementById('productsByCategory');
+        container.innerHTML = '';
+        const filteredProducts = currentCategory === 'todos' ? products : products.filter(p => p.category === currentCategory);
+        if (filteredProducts.length === 0) { container.innerHTML = '<p class="empty-cart">Nenhum produto encontrado.</p>'; return; }
+        const grid = document.createElement('div');
+        grid.className = 'product-grid';
+        grid.innerHTML = filteredProducts.map(product => {
+            const minPrice = Math.min(...product.variations.map(v => v.price));
+            return `<div class="product-card fade-in" onclick="showProduct(${product.id})">
+                      <i class="${product.icon}"></i><h3>${product.name}</h3><p>${product.description}</p>
+                      <div style="margin-top: 0.5rem;"><span style="font-weight: bold;">A partir de ${formatPrice(minPrice)}</span></div>
+                      <small>${product.variations.length} opção${product.variations.length > 1 ? 's' : ''}</small>
+                    </div>`;
+        }).join('');
+        container.appendChild(grid);
+    }
+    
+    function showProduct(id) {
         const product = products.find(p => p.id === id);
-        if (!product) { goHome(); return; }
-        
-        const container = document.getElementById('main-container');
-        container.innerHTML = `
-            <div id="productDetail">
-              <a class="top-back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
-              <div class="product-detail fade-in">
-                <h2 id="productName"><i class="${product.icon}"></i> ${product.name}</h2>
-                <p id="productDescription">${product.description}</p>
-                <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
-                <div id="variationsContainer"></div>
-                <div id="selectedVariationDetails"></div>
-                <div class="quantity-control">
-                  <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
-                  <input type="number" class="quantity-input" id="productQuantity" value="1" min="1" oninput="validateQuantityInput()">
-                  <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
-                </div>
-                <button class="btn btn-primary" id="addToCartBtn" onclick="addToCart()"><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
-              </div>
-            </div>`;
-        
+        if (!product) return;
         selectedProductId = id;
-        document.getElementById("variationsContainer").innerHTML = product.variations.map(v => `<div class="variation-btn ${v.quantity === 0 ? 'is-sold-out' : ''}" data-name="${v.name}" onclick="selectVariation(this, '${v.name}')"><strong>${v.name}</strong><br><small>${formatPrice(v.price)}${v.quantity === 0 ? ' (Esgotado)' : ''}</small></div>`).join('');
-        const firstAvailable = document.querySelector('#variationsContainer .variation-btn:not(.is-sold-out)');
-        if (firstAvailable) selectVariation(firstAvailable, firstAvailable.dataset.name);
-        else { document.getElementById("selectedVariationDetails").innerHTML = "<p>Todas as opções deste produto estão esgotadas.</p>"; document.getElementById('addToCartBtn').disabled = true; }
-        window.scrollTo(0, 0);
+        document.getElementById("productName").innerHTML = `<i class="${product.icon}"></i> ${product.name}`;
+        document.getElementById("productDescription").textContent = product.description;
+        document.getElementById("productQuantity").value = 1;
+        const variationsContainer = document.getElementById("variationsContainer");
+        variationsContainer.innerHTML = product.variations.map((variation, index) => 
+            `<div class="variation-btn ${index === 0 ? 'active' : ''}" data-value="${variation.name}" onclick="selectVariation(this, '${variation.name}')">
+                <strong>${variation.name}</strong><br><small>${formatPrice(variation.price)}</small>
+             </div>`
+        ).join('');
+        selectVariation(variationsContainer.children[0], product.variations[0].name);
+        document.getElementById("homePage").classList.add("hidden");
+        document.getElementById("productDetail").classList.remove("hidden");
     }
-    
+
     function selectVariation(element, variationName) {
-        if (element.classList.contains('is-sold-out')) return;
         document.querySelectorAll(".variation-btn").forEach(b => b.classList.remove("active"));
         element.classList.add("active");
-        selectedVariationName = variationName;
+        selectedVariationText = variationName;
         const product = products.find(p => p.id === selectedProductId);
         const variation = product.variations.find(v => v.name === variationName);
-        document.getElementById("selectedVariationDetails").innerHTML = `<div class="selected-variation"><div><strong>${variation.name} - ${formatPrice(variation.price)}</strong></div><div style="margin-top: 0.5rem; font-size: 0.9rem;">${variation.details}</div><div class="important-note"><strong>Importante:</strong> ${variation.important}</div><div style="color: var(--primary-color); margin-top: 0.5rem;"><strong>Estoque: ${variation.quantity}</strong></div></div>`;
-        document.getElementById('addToCartBtn').disabled = false;
-        document.getElementById('productQuantity').max = variation.quantity;
-        validateQuantityInput();
+        document.getElementById("selectedVariation").innerHTML = `
+            <div><strong>${variation.name} - ${formatPrice(variation.price)}</strong></div>
+            <div style="margin-top: 0.5rem;">${variation.details}</div>
+            <div class="important-note"><strong>Importante:</strong> ${variation.important}</div>`;
     }
-
-    function renderCategories() {
-        const categories = ['Todos', ...new Set(products.map(p => p.category))];
-        document.getElementById('categoryTabs').innerHTML = categories.map(cat => `<div class="category-tab ${cat === (currentCategory === 'todos' ? 'Todos' : currentCategory) ? 'active' : ''}" onclick="filterProducts('${cat}')">${cat}</div>`).join('');
-    }
-    function filterProducts(category) {
-        currentCategory = category === 'Todos' ? 'todos' : category;
-        saveData();
-        renderAllProducts();
-    }
-    function renderAllProducts() {
-        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-        const activeTab = document.querySelector(`.category-tab[onclick="filterProducts('${currentCategory === 'todos' ? 'Todos' : currentCategory}')"]`);
-        if (activeTab) activeTab.classList.add('active');
-
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        let productList = [...products];
-        if (searchTerm) productList = productList.filter(p => p.name.toLowerCase().includes(searchTerm));
-        if (currentCategory !== 'todos') productList = productList.filter(p => p.category === currentCategory);
-
-        const sortValue = document.getElementById('sortSelect').value;
-        if (sortValue === 'price_asc') productList.sort((a, b) => Math.min(...a.variations.map(v => v.price)) - Math.min(...b.variations.map(v => v.price)));
-        else if (sortValue === 'price_desc') productList.sort((a, b) => Math.min(...b.variations.map(v => v.price)) - Math.min(...a.variations.map(v => v.price)));
-        else if (sortValue === 'name_asc') productList.sort((a, b) => a.name.localeCompare(b.name));
-        else if (sortValue === 'name_desc') productList.sort((a, b) => b.name.localeCompare(a.name));
-
-        const featuredContainer = document.getElementById('featuredProducts');
-        const productsContainer = document.getElementById('productsByCategory');
-        if (currentCategory === 'todos' && !searchTerm) {
-            const featured = productList.filter(p => p.featured);
-            const nonFeatured = productList.filter(p => !p.featured);
-            featuredContainer.innerHTML = (featured.length > 0) ? `<h2 class="section-title featured-title">★ Destaques</h2>` + createProductGrid(featured) : '';
-            productsContainer.innerHTML = `<h2 class="section-title">Outros Produtos</h2>` + createProductGrid(nonFeatured);
-        } else {
-            featuredContainer.innerHTML = '';
-            productsContainer.innerHTML = `<h2 class="section-title">Resultados</h2>` + createProductGrid(productList);
-        }
-    }
-
-    function createProductGrid(list) {
-        if (list.length === 0) return '<p class="empty-cart">Nenhum produto encontrado.</p>';
-        return `<div class="product-grid">${list.map(product => {
-            const isSoldOut = product.variations.every(v => v.quantity === 0);
-            return `<div class="product-card fade-in ${product.featured ? 'is-featured' : ''}" onclick="navigateToProduct(${product.id})">
-                      ${isSoldOut ? '<div class="sold-out-badge">Esgotado</div>' : ''}
-                      <i class="product-icon ${product.icon}"></i><h3>${product.name}</h3>
-                      <div class="product-rating">${renderStars(product.rating || 0)}</div>
-                      <p style="font-size: 0.9rem; color: var(--light-gray);">${product.description}</p>
-                    </div>`;
-        }).join('')}</div>`;
-    }
-    function renderStars(rating) { let html = ''; for (let i = 1; i <= 5; i++) html += `<i class="${i <= rating ? 'fas' : 'far'} fa-star"></i>`; return html; }
-
-    function changeQuantity(change) { const input = document.getElementById('productQuantity'); input.value = parseInt(input.value) + change; validateQuantityInput(); }
-    function validateQuantityInput() { const input = document.getElementById('productQuantity'); const max = parseInt(input.max) || 99; if (parseInt(input.value) > max) input.value = max; if (parseInt(input.value) < 1 || isNaN(parseInt(input.value))) input.value = 1; }
 
     function addToCart() {
-        if (!selectedVariationName) return;
-        const quantity = parseInt(document.getElementById('productQuantity').value);
+        if (!selectedProductId || !selectedVariationText) { showAlert("Selecione uma opção.", "danger"); return; }
+        const quantity = parseInt(document.getElementById('productQuantity').value) || 1;
         const product = products.find(p => p.id === selectedProductId);
-        const variation = product.variations.find(v => v.name === selectedVariationName);
-        const itemInCart = cart.find(item => item.productId === product.id && item.variation === variation.name);
-        const quantityInCart = itemInCart ? itemInCart.quantity : 0;
-        if (quantity + quantityInCart > variation.quantity) { showAlert(`Estoque insuficiente. Restam ${variation.quantity - quantityInCart}.`, 'danger'); return; }
-        if (itemInCart) itemInCart.quantity += quantity;
-        else cart.push({ id: Date.now(), productId: product.id, name: product.name, variation: variation.name, price: variation.price, quantity: quantity, icon: product.icon });
-        updateCart();
-        showAlert("Adicionado ao carrinho!", "success");
-        document.getElementById('cart-icon').parentElement.classList.add('shake');
-        setTimeout(() => document.getElementById('cart-icon').parentElement.classList.remove('shake'), 500);
+        const variation = product.variations.find(v => v.name === selectedVariationText);
+        const existingItem = cart.find(item => item.productId === product.id && item.variation === variation.name);
+        if (existingItem) { existingItem.quantity += quantity; } 
+        else { cart.push({ id: Date.now(), productId: product.id, name: product.name, variation: variation.name, price: variation.price, quantity: quantity, icon: product.icon }); }
+        saveCart(); updateCart(); showAlert("Adicionado ao carrinho!", "success");
     }
-    function clearCart() { if (confirm('Tem certeza que deseja esvaziar o carrinho?')) { cart = []; updateCart(); showAlert('Carrinho esvaziado.', 'danger'); } }
-    function removeFromCart(itemId) { cart = cart.filter(item => item.id !== itemId); updateCart(); }
+
+    function removeFromCart(itemId) { cart = cart.filter(item => item.id !== itemId); saveCart(); updateCart(); showAlert("Item removido.", "danger"); }
+    function updateItemQuantity(itemId, change) { const item = cart.find(item => item.id === itemId); if (item) { item.quantity += change; if (item.quantity < 1) removeFromCart(itemId); else { saveCart(); updateCart(); } } }
+    
     function updateCart() {
+        const cartItems = document.getElementById("cart-items");
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         document.getElementById("cart-count").textContent = totalItems;
         document.getElementById("cart-badge").textContent = totalItems;
-        const cartItemsEl = document.getElementById("cart-items");
-        if (cart.length === 0) cartItemsEl.innerHTML = '<div class="empty-cart">Seu carrinho está vazio</div>';
-        else cartItemsEl.innerHTML = cart.map(item => `<div class="cart-item"><div><i class="${item.icon}"></i> <strong>${item.name}</strong> - ${item.variation}<div><strong>${formatPrice(item.price)} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}</strong></div></div><button class="clear-cart-btn" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button></div>`).join('');
+        if (cart.length === 0) { cartItems.innerHTML = '<div class="empty-cart">Seu carrinho está vazio</div>'; } 
+        else {
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item fade-in">
+                    <div>
+                        <i class="${item.icon}"></i> <strong>${item.name}</strong> - ${item.variation}
+                        <div><strong>${formatPrice(item.price)} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}</strong></div>
+                    </div>
+                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button>
+                </div>`).join('');
+        }
         updateCartTotals();
-        saveData();
     }
+
+    function applyCoupon() {
+        const couponCode = document.getElementById("couponInput").value.trim().toUpperCase();
+        if (settings.coupon && couponCode === settings.coupon.code.toUpperCase()) { discountApplied = true; showAlert("Cupom aplicado!", "success"); } 
+        else { discountApplied = false; showAlert("Cupom inválido.", "danger"); }
+        updateCartTotals();
+    }
+    
     function updateCartTotals() {
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
         const total = subtotal - discount;
-        document.getElementById("cart-subtotal").textContent = formatPrice(subtotal);
-        document.getElementById("cart-final-total").textContent = formatPrice(total);
-        document.getElementById("discount-applied").style.display = discountApplied ? 'block' : 'none';
-        document.getElementById("cart-discount").style.display = discountApplied ? 'block' : 'none';
-        if (discountApplied) document.getElementById("discount-amount").textContent = formatPrice(discount);
-    }
-    function applyCoupon() {
-        const code = document.getElementById("couponInput").value.trim().toUpperCase();
-        if (settings.coupon && code === settings.coupon.code.toUpperCase()) { discountApplied = true; showAlert("Cupom aplicado!", "success"); } 
-        else { discountApplied = false; showAlert("Cupom inválido.", "danger"); }
-        updateCartTotals();
+        const cartTotalEl = document.getElementById("cart-total");
+        const discountAmountEl = document.getElementById("discount-amount");
+        const finalTotalEl = document.getElementById("final-total");
+        const discountAppliedEl = document.getElementById("discount-applied");
+        const cartDiscountEl = document.getElementById("cart-discount");
+
+        if(cartTotalEl) cartTotalEl.textContent = formatPrice(subtotal);
+        if(discountAmountEl) discountAmountEl.textContent = formatPrice(discount);
+        if(finalTotalEl) finalTotalEl.textContent = formatPrice(total);
+        if(discountAppliedEl) discountAppliedEl.style.display = discountApplied ? 'block' : 'none';
+        if(cartDiscountEl) cartDiscountEl.style.display = discountApplied ? 'block' : 'none';
     }
 
-    function showCheckoutModal() {
+    function checkout() {
         if (cart.length === 0) { showAlert("Seu carrinho está vazio.", "danger"); return; }
-        const summary = document.getElementById('modalOrderSummary');
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
-        summary.innerHTML = cart.map(item => `<div class="order-summary-item"><span>${item.quantity}x ${item.name} (${item.variation})</span><strong>${formatPrice(item.price * item.quantity)}</strong></div>`).join('') + `<hr style="border-color: var(--light-gray); margin: 1rem 0;"><div class="order-summary-item"><span>Subtotal</span><strong>${formatPrice(subtotal)}</strong></div>` + (discount > 0 ? `<div class="order-summary-item" style="color: var(--accent-color);"><span>Desconto</span><strong>-${formatPrice(discount)}</strong></div>` : '') + `<div class="order-summary-item" style="font-size: 1.2rem;"><span>Total</span><strong>${formatPrice(subtotal - discount)}</strong></div>`;
-        document.getElementById('checkoutModal').classList.add('show');
-    }
-    function closeCheckoutModal() { document.getElementById('checkoutModal').classList.remove('show'); }
-    function confirmCheckout() {
-        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0), discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
-        let message = "Olá, gostaria de finalizar meu pedido:\n\n" + cart.map(item => `*${item.quantity}x ${item.name} - ${item.variation}* (${formatPrice(item.price * item.quantity)})`).join("\n") + `\n\n*Subtotal:* ${formatPrice(subtotal)}` + (discount > 0 ? `\n*Desconto:* -${formatPrice(discount)}` : '') + `\n*Total a Pagar:* *${formatPrice(subtotal - discount)}*\n\nAguardo as instruções.`;
-        if (settings.links?.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent(message)}`, "_blank");
-        closeCheckoutModal();
-    }
-    
-    // Função de inicialização principal
-    function initPage() {
-        settings = siteData.settings;
-        products = siteData.products;
-        
-        document.title = settings.title || "Loja";
-        
-        loadData();
-        handleLocation();
-        
-        window.addEventListener('popstate', handleLocation);
+        const total = subtotal - discount;
+        let itemsText = cart.map(item => `*${item.name} - ${item.variation}*\nQuantidade: ${item.quantity}\nSubtotal: ${formatPrice(item.price * item.quantity)}`).join("\n\n");
+        let message = `Olá, gostaria de adquirir os seguintes planos:\n\n${itemsText}\n\n*Subtotal: ${formatPrice(subtotal)}*`;
+        if(discountApplied) message += `\n*Desconto: -${formatPrice(discount)}*`;
+        message += `\n*Total: ${formatPrice(total)}*\n\nPor favor, informe os próximos passos para finalizar.`;
+        if (settings.links && settings.links.support_whatsapp_number) {
+            window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent(message)}`, "_blank");
+        }
     }
 
-    // Inicia tudo quando a página carregar
+    function openSupportWhatsApp() { if (settings.links && settings.links.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent("Olá, preciso de suporte!")}`, "_blank"); }
+    function openTelegram() { if (settings.links && settings.links.support_telegram) window.open(settings.links.support_telegram, "_blank"); }
+    function openGroupWhatsApp() { if (settings.links && settings.links.group_whatsapp) window.open(settings.links.group_whatsapp, "_blank"); }
+
+    // --- Inicialização da Página ---
+    async function initPage() {
+        try {
+            const settingsPromise = fetch('/_data/settings.json?v=' + new Date().getTime()).then(res => res.json());
+            const productsPromise = fetch('/_data/products.json?v=' + new Date().getTime()).then(res => res.json());
+            
+            [settings, { items }] = await Promise.all([settingsPromise, productsPromise]);
+            products = items;
+
+            document.title = settings.title || "Troço TV e Streaming";
+            document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
+            document.getElementById("site-tagline").textContent = settings.tagline;
+            if(settings.coupon) document.getElementById("discountValue").textContent = `${settings.coupon.percentage * 100}%`;
+
+            loadCart();
+            renderCategories();
+            renderProducts();
+        } catch (error) {
+            console.error("Erro ao carregar os dados:", error);
+            document.querySelector('.container').innerHTML = "<h1>Erro ao carregar o site. Tente novamente mais tarde.</h1>";
+        }
+    }
     document.addEventListener("DOMContentLoaded", initPage);
   </script>
 </body>
