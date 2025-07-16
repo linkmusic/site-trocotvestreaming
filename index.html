@@ -162,13 +162,85 @@
     let settings = {};
     let currentCategory = 'todos';
     
-    // --- Funções de Renderização e Lógica ---
+    // --- Funções de Navegação e Histórico ---
+
+    // Função que decide qual página mostrar com base na URL
+    function handleLocation() {
+        const hash = window.location.hash;
+        if (hash.startsWith('#produto/')) {
+            const productId = parseInt(hash.split('/')[1]);
+            // Se os produtos já foram carregados, mostra a página do produto
+            if (products.length > 0) {
+                renderProductPage(productId);
+            } else {
+                // Se não, espera o evento 'productsLoaded' e então mostra
+                document.addEventListener('productsLoaded', () => renderProductPage(productId), { once: true });
+            }
+        } else {
+            // Se não há hash de produto, mostra a página inicial
+            renderHomePage();
+        }
+    }
+
+    // Função para navegar para a página de um produto
+    function navigateToProduct(id) {
+        // Adiciona um estado ao histórico do navegador, mudando a URL sem recarregar
+        history.pushState({ productId: id }, `Produto ${id}`, `#produto/${id}`);
+        renderProductPage(id);
+    }
+    
+    // Função para voltar para a página inicial
+    function goHome() {
+        // Adiciona um estado para a página inicial, limpando a URL
+        history.pushState({ productId: null }, 'Página Inicial', window.location.pathname);
+        renderHomePage();
+    }
+
+    // "Escuta" o clique no botão de voltar do navegador/celular
+    window.addEventListener('popstate', (event) => {
+        handleLocation();
+    });
+
+
+    // --- Funções de Renderização de Páginas ---
+
+    function renderHomePage() {
+        document.getElementById("homePage").classList.remove("hidden");
+        document.getElementById("productDetail").classList.add("hidden");
+    }
+
+    function renderProductPage(id) {
+        const product = products.find(p => p.id === id);
+        if (!product) {
+            goHome(); // Se o produto não for encontrado, volta para a home
+            return;
+        }
+        
+        selectedProductId = id;
+        document.getElementById("productName").innerHTML = `<i class="${product.icon}"></i> ${product.name}`;
+        document.getElementById("productDescription").textContent = product.description;
+        document.getElementById("productQuantity").value = 1;
+        
+        const variationsContainer = document.getElementById("variationsContainer");
+        variationsContainer.innerHTML = product.variations.map((variation, index) => 
+            `<div class="variation-btn ${index === 0 ? 'active' : ''}" onclick="selectVariation(this, '${variation.name}')">
+                <strong>${variation.name}</strong><br><small>${formatPrice(variation.price)}</small>
+             </div>`
+        ).join('');
+        
+        selectVariation(variationsContainer.children[0], product.variations[0].name);
+        
+        document.getElementById("homePage").classList.add("hidden");
+        document.getElementById("productDetail").classList.remove("hidden");
+        window.scrollTo(0, 0); // Rola a página para o topo
+    }
+
+    // --- Funções do Carrinho e Lógica da Loja ---
     function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
     function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); updateCart(); } }
     function saveCart() { localStorage.setItem('trocoTVCart', JSON.stringify(cart)); }
     function changeQuantity(change) { const input = document.getElementById('productQuantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }
     function showAlert(message, type) { const alert = document.createElement("div"); alert.className = `alert alert-${type}`; alert.textContent = message; document.body.appendChild(alert); setTimeout(() => { alert.style.animation = "fadeOut 0.5s ease"; setTimeout(() => alert.remove(), 500); }, 3000); }
-    function goHome() { document.getElementById("homePage").classList.remove("hidden"); document.getElementById("productDetail").classList.add("hidden"); }
     function toggleCart() { document.getElementById("cartDropdown").classList.toggle("show"); }
 
     function renderCategories() {
@@ -193,7 +265,8 @@
         grid.className = 'product-grid';
         grid.innerHTML = filteredProducts.map(product => {
             const minPrice = Math.min(...product.variations.map(v => v.price));
-            return `<div class="product-card fade-in" onclick="showProduct(${product.id})">
+            // AQUI MUDAMOS a chamada para navigateToProduct
+            return `<div class="product-card fade-in" onclick="navigateToProduct(${product.id})">
                       <i class="${product.icon}"></i><h3>${product.name}</h3><p>${product.description}</p>
                       <div style="margin-top: 0.5rem;"><span style="font-weight: bold;">A partir de ${formatPrice(minPrice)}</span></div>
                       <small>${product.variations.length} opção${product.variations.length > 1 ? 's' : ''}</small>
@@ -202,25 +275,8 @@
         container.appendChild(grid);
     }
     
-    function showProduct(id) {
-        const product = products.find(p => p.id === id);
-        if (!product) return;
-        selectedProductId = id;
-        document.getElementById("productName").innerHTML = `<i class="${product.icon}"></i> ${product.name}`;
-        document.getElementById("productDescription").textContent = product.description;
-        document.getElementById("productQuantity").value = 1;
-        const variationsContainer = document.getElementById("variationsContainer");
-        variationsContainer.innerHTML = product.variations.map((variation, index) => 
-            `<div class="variation-btn ${index === 0 ? 'active' : ''}" data-value="${variation.name}" onclick="selectVariation(this, '${variation.name}')">
-                <strong>${variation.name}</strong><br><small>${formatPrice(variation.price)}</small>
-             </div>`
-        ).join('');
-        selectVariation(variationsContainer.children[0], product.variations[0].name);
-        document.getElementById("homePage").classList.add("hidden");
-        document.getElementById("productDetail").classList.remove("hidden");
-    }
-
     function selectVariation(element, variationName) {
+        if (!element) return;
         document.querySelectorAll(".variation-btn").forEach(b => b.classList.remove("active"));
         element.classList.add("active");
         selectedVariationText = variationName;
@@ -244,7 +300,6 @@
     }
 
     function removeFromCart(itemId) { cart = cart.filter(item => item.id !== itemId); saveCart(); updateCart(); showAlert("Item removido.", "danger"); }
-    function updateItemQuantity(itemId, change) { const item = cart.find(item => item.id === itemId); if (item) { item.quantity += change; if (item.quantity < 1) removeFromCart(itemId); else { saveCart(); updateCart(); } } }
     
     function updateCart() {
         const cartItems = document.getElementById("cart-items");
@@ -276,17 +331,11 @@
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
         const total = subtotal - discount;
-        const cartTotalEl = document.getElementById("cart-total");
-        const discountAmountEl = document.getElementById("discount-amount");
-        const finalTotalEl = document.getElementById("final-total");
-        const discountAppliedEl = document.getElementById("discount-applied");
-        const cartDiscountEl = document.getElementById("cart-discount");
-
-        if(cartTotalEl) cartTotalEl.textContent = formatPrice(subtotal);
-        if(discountAmountEl) discountAmountEl.textContent = formatPrice(discount);
-        if(finalTotalEl) finalTotalEl.textContent = formatPrice(total);
-        if(discountAppliedEl) discountAppliedEl.style.display = discountApplied ? 'block' : 'none';
-        if(cartDiscountEl) cartDiscountEl.style.display = discountApplied ? 'block' : 'none';
+        document.getElementById("cart-total").textContent = formatPrice(subtotal);
+        document.getElementById("discount-amount").textContent = formatPrice(discount);
+        document.getElementById("final-total").textContent = formatPrice(total);
+        document.getElementById("discount-applied").style.display = discountApplied ? 'block' : 'none';
+        document.getElementById("cart-discount").style.display = discountApplied ? 'block' : 'none';
     }
 
     function checkout() {
@@ -305,16 +354,20 @@
 
     function openSupportWhatsApp() { if (settings.links && settings.links.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent("Olá, preciso de suporte!")}`, "_blank"); }
     function openTelegram() { if (settings.links && settings.links.support_telegram) window.open(settings.links.support_telegram, "_blank"); }
-    function openGroupWhatsApp() { if (settings.links && settings.links.group_whatsapp) window.open(settings.links.group_whatsapp, "_blank"); }
+    function openGroupWhatsApp() { if (settings.links && settings.links.group_whatsapp) window.open(settings.links.support_whatsapp_number, "_blank"); }
 
     // --- Inicialização da Página ---
     async function initPage() {
         try {
-            const settingsPromise = fetch('/_data/settings.json?v=' + new Date().getTime()).then(res => res.json());
-            const productsPromise = fetch('/_data/products.json?v=' + new Date().getTime()).then(res => res.json());
+            // **MUDANÇA IMPORTANTE: Renomeie a pasta _data para data se houver problemas na publicação**
+            const settingsPromise = fetch('/data/settings.json?v=' + new Date().getTime()).then(res => res.json());
+            const productsPromise = fetch('/data/products.json?v=' + new Date().getTime()).then(res => res.json());
             
             [settings, { items }] = await Promise.all([settingsPromise, productsPromise]);
             products = items;
+            
+            // Dispara um evento para notificar que os produtos foram carregados
+            document.dispatchEvent(new Event('productsLoaded'));
 
             document.title = settings.title || "Troço TV e Streaming";
             document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
@@ -324,9 +377,12 @@
             loadCart();
             renderCategories();
             renderProducts();
+
+            // Roda a função de localização para verificar a URL na carga inicial
+            handleLocation();
         } catch (error) {
             console.error("Erro ao carregar os dados:", error);
-            document.querySelector('.container').innerHTML = "<h1>Erro ao carregar o site. Tente novamente mais tarde.</h1>";
+            document.querySelector('.container').innerHTML = "<h1>Erro ao carregar o site. Verifique se a pasta de dados foi renomeada corretamente e publicada.</h1>";
         }
     }
     document.addEventListener("DOMContentLoaded", initPage);

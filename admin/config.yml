@@ -52,6 +52,11 @@ collections:
                 summary: "{{fields.name}} - R$ {{fields.price}}"
                 fields:
                   - { label: "Nome da Variação", name: "name", widget: "string" }
-                  - { label: "Preço", name: "price", widget: "number" }
+                  - label: "Preço" # CAMPO DE PREÇO ATUALIZADO
+                    name: "price"
+                    widget: "number"
+                    value_type: "float"
+                    min: 0
+                    step: 0.01
                   - { label: "Detalhes", name: "details", widget: "text" }
                   - { label: "Nota Importante", name: "important", widget: "text" }
