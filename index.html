@@ -112,11 +112,11 @@
         <button class="apply-coupon" onclick="applyCoupon()">Aplicar</button>
       </div>
       <div class="discount-applied" id="discountApplied">
-        <i class="fas fa-tag"></i> Cupom aplicado: <span id="discountValue">10%</span> de desconto
+        <i class="fas fa-tag"></i> Cupom aplicado: <span id="discountValue"></span> de desconto
       </div>
       <div class="cart-total">Total: <span id="cart-total">R$ 0,00</span>
         <div id="cart-discount" style="color: var(--discount-color); display: none;">Desconto: -<span id="discount-amount">R$ 0,00</span></div>
-        <div id="cart-final-total">Total com desconto: <span id="final-total">R$ 0,00</span></div>
+        <div id="cart-final-total" style="font-weight: bold;">Total com desconto: <span id="final-total">R$ 0,00</span></div>
       </div>
       <button class="btn btn-success checkout-btn" onclick="checkout()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button>
     </div>
@@ -172,15 +172,13 @@
     let settings = {};
     let currentCategory = 'todos';
     
-    // --- Funções Auxiliares ---
     function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
-    function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); updateCart(); } }
+    function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); } updateCart(); }
     function saveCart() { localStorage.setItem('trocoTVCart', JSON.stringify(cart)); }
     function changeQuantity(change) { const input = document.getElementById('productQuantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }
     function showAlert(message, type) { const alert = document.createElement("div"); alert.className = `alert alert-${type}`; alert.textContent = message; document.body.appendChild(alert); setTimeout(() => { alert.style.animationName = "fadeOut"; setTimeout(() => alert.remove(), 500); }, 3000); }
     function toggleCart() { document.getElementById("cartDropdown").classList.toggle("show"); }
 
-    // --- Lógica de Navegação e Roteamento ---
     function handleLocation() {
         const hash = window.location.hash;
         if (hash.startsWith('#produto/')) {
@@ -196,7 +194,7 @@
     }
     function navigateToProduct(id) {
         const product = products.find(p => p.id === id);
-        if (!product || product.variations.every(v => v.quantity === 0)) {
+        if (product && product.variations.every(v => v.quantity === 0)) {
             showAlert('Este produto está totalmente esgotado.', 'danger');
             return;
         }
@@ -204,18 +202,16 @@
         renderProductDetail(id);
     }
     function goHome() {
-        history.pushState({ page: 'home' }, 'Página Inicial', window.location.pathname);
+        history.pushState({ page: 'home' }, 'Página Inicial', window.location.pathname + window.location.search);
         renderHomePage();
     }
 
-    // --- Funções de Renderização ---
     function renderLoadingSkeletons() {
         const skeletonCard = `
             <div class="skeleton-card skeleton">
                 <div class="skeleton-card-icon"></div>
                 <div class="skeleton-card-text" style="width: 60%;"></div>
                 <div class="skeleton-card-text" style="width: 90%;"></div>
-                <div class="skeleton-card-text" style="width: 40%; margin-top: 1rem;"></div>
             </div>`;
         const skeletonHTML = `<div class="product-grid">${skeletonCard.repeat(3)}</div>`;
         document.getElementById('featuredProducts').innerHTML = skeletonHTML;
@@ -314,17 +310,10 @@
             const featured = productList.filter(p => p.featured);
             const nonFeatured = productList.filter(p => !p.featured);
             
-            if (featured.length > 0) {
-                featuredContainer.innerHTML = `<h2 class="section-title featured-title">★ Destaques</h2>` + createProductGrid(featured);
-                featuredContainer.classList.remove('hidden');
-            } else {
-                featuredContainer.innerHTML = '';
-                featuredContainer.classList.add('hidden');
-            }
+            featuredContainer.innerHTML = (featured.length > 0) ? `<h2 class="section-title featured-title">★ Destaques</h2>` + createProductGrid(featured) : '';
             productsContainer.innerHTML = `<h2 class="section-title">Outros Produtos</h2>` + createProductGrid(nonFeatured);
         } else {
             featuredContainer.innerHTML = '';
-            featuredContainer.classList.add('hidden');
             const title = searchTerm ? 'Resultados da Pesquisa' : `Produtos em ${currentCategory}`;
             productsContainer.innerHTML = `<h2 class="section-title">${title}</h2>` + createProductGrid(productList);
         }
@@ -332,19 +321,15 @@
 
     function createProductGrid(list) {
         if (list.length === 0) return '<p class="empty-cart">Nenhum produto encontrado.</p>';
-        const grid = list.map(product => {
+        return `<div class="product-grid">${list.map(product => {
             const isProductSoldOut = product.variations.every(v => v.quantity === 0);
             return `<div class="product-card fade-in ${product.featured ? 'is-featured' : ''}" onclick="navigateToProduct(${product.id})">
                       ${isProductSoldOut ? '<div class="sold-out-badge">Esgotado</div>' : ''}
-                      <i class="${product.icon}"></i>
-                      <h3>${product.name}</h3>
-                      <p>${product.description}</p>
+                      <i class="${product.icon}"></i><h3>${product.name}</h3><p>${product.description}</p>
                     </div>`;
-        }).join('');
-        return `<div class="product-grid">${grid}</div>`;
+        }).join('')}</div>`;
     }
 
-    // --- Funções do Carrinho ---
     function addToCart() {
         if (!selectedProductId || !selectedVariationName) { showAlert("Selecione uma opção válida.", "danger"); return; }
         
@@ -375,40 +360,64 @@
     function updateCart() {
         const cartItems = document.getElementById("cart-items");
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        document.getElementById("cart-count").textContent = totalItems;
-        document.getElementById("cart-badge").textContent = totalItems;
-        if (cart.length === 0) { cartItems.innerHTML = '<div class="empty-cart">Seu carrinho está vazio</div>'; } 
-        else {
-            cartItems.innerHTML = cart.map(item => `
-                <div class="cart-item fade-in">
-                    <div>
-                        <i class="${item.icon}"></i> <strong>${item.name}</strong> - ${item.variation}
-                        <div><strong>${formatPrice(item.price)} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}</strong></div>
-                    </div>
-                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button>
-                </div>`).join('');
+        
+        const cartCountEl = document.getElementById("cart-count");
+        if(cartCountEl) cartCountEl.textContent = totalItems;
+        
+        const cartBadgeEl = document.getElementById("cart-badge");
+        if(cartBadgeEl) cartBadgeEl.textContent = totalItems;
+
+        if (cartItems) {
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Seu carrinho está vazio</div>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item fade-in">
+                        <div>
+                            <i class="${item.icon}"></i> <strong>${item.name}</strong> - ${item.variation}
+                            <div><strong>${formatPrice(item.price)} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}</strong></div>
+                        </div>
+                        <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button>
+                    </div>`).join('');
+            }
         }
         updateCartTotals();
     }
 
     function applyCoupon() {
-        const couponCode = document.getElementById("couponInput").value.trim().toUpperCase();
-        if (settings.coupon && couponCode === settings.coupon.code.toUpperCase()) { discountApplied = true; showAlert("Cupom aplicado!", "success"); } 
-        else { discountApplied = false; showAlert("Cupom inválido.", "danger"); }
+        const couponInput = document.getElementById("couponInput");
+        if (!couponInput) return;
+        const couponCode = couponInput.value.trim().toUpperCase();
+        if (settings.coupon && couponCode === settings.coupon.code.toUpperCase()) {
+            discountApplied = true;
+            showAlert("Cupom aplicado!", "success");
+        } else {
+            discountApplied = false;
+            showAlert("Cupom inválido.", "danger");
+        }
         updateCartTotals();
     }
     
+    // *** FUNÇÃO CORRIGIDA ***
     function updateCartTotals() {
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
         const total = subtotal - discount;
-        document.getElementById("cart-total").textContent = formatPrice(subtotal);
-        const discountAmountEl = document.getElementById("discount-amount");
-        document.getElementById("final-total").textContent = formatPrice(total);
-        document.getElementById("discount-applied").style.display = discountApplied ? 'block' : 'none';
+
+        const cartTotalEl = document.getElementById("cart-total");
+        if (cartTotalEl) cartTotalEl.textContent = formatPrice(subtotal);
+
+        const finalTotalEl = document.getElementById("final-total");
+        if (finalTotalEl) finalTotalEl.textContent = formatPrice(total);
+
+        const discountAppliedEl = document.getElementById("discount-applied");
+        if (discountAppliedEl) discountAppliedEl.style.display = discountApplied ? 'block' : 'none';
+
         const cartDiscountEl = document.getElementById("cart-discount");
-        cartDiscountEl.style.display = discountApplied ? 'block' : 'none';
-        if (discountApplied) {
+        if (cartDiscountEl) cartDiscountEl.style.display = discountApplied ? 'block' : 'none';
+        
+        const discountAmountEl = document.getElementById("discount-amount");
+        if (discountApplied && discountAmountEl) {
             discountAmountEl.textContent = formatPrice(discount);
         }
     }
@@ -431,7 +440,6 @@
     function openTelegram() { if (settings.links && settings.links.support_telegram) window.open(settings.links.support_telegram, "_blank"); }
     function openGroupWhatsApp() { if (settings.links && settings.links.group_whatsapp) window.open(settings.links.group_whatsapp, "_blank"); }
 
-    // --- Inicialização da Página ---
     async function initPage() {
         renderLoadingSkeletons();
         try {
@@ -439,15 +447,18 @@
             const productsPromise = fetch('/_data/products.json?v=' + Date.now()).then(res => res.json());
             
             [settings, { items }] = await Promise.all([settingsPromise, productsPromise]);
-            products = items;
+            products = items || [];
 
             document.dispatchEvent(new Event('productsLoaded'));
             document.title = settings.title || "Troço TV e Streaming";
             const siteTitleEl = document.getElementById("site-title");
             if (siteTitleEl) siteTitleEl.innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
+            
             const taglineEl = document.getElementById("site-tagline");
             if (taglineEl) taglineEl.textContent = settings.tagline;
-            if(settings.coupon) document.getElementById("discountValue").textContent = `${settings.coupon.percentage * 100}%`;
+            
+            const discountValueEl = document.getElementById("discountValue");
+            if(settings.coupon && discountValueEl) discountValueEl.textContent = `${settings.coupon.percentage * 100}%`;
             
             loadCart();
             renderCategories();
@@ -459,7 +470,7 @@
 
         } catch (error) {
             console.error("Erro ao carregar os dados:", error);
-            document.querySelector('.container').innerHTML = "<h1 style='color: var(--danger-color);'>Erro ao carregar o site. Tente novamente mais tarde.</h1>";
+            document.querySelector('.container').innerHTML = `<h1 style='color: var(--danger-color); text-align: center;'>Erro ao carregar o site.<br>Por favor, tente novamente mais tarde.</h1>`;
         }
     }
     document.addEventListener("DOMContentLoaded", initPage);
