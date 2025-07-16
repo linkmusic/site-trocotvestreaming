@@ -42,7 +42,7 @@
         },
         {
           "name": "Privado - Mensal",
-          "price": 5.99,
+          "price": 8,
           "details": "Perfil exclusivo para você | Renovação mensal | Suporte completo",
           "important": "Uso em até 4 dispositivos simultâneos | Validade de 30 dias"
         }
@@ -177,7 +177,7 @@
       "variations": [
         {
           "name": "1 Convite no seu Email (Mensal)",
-          "price": 3.99,
+          "price": 5,
           "details": "Convite enviado para seu email | Renovação mensal",
           "important": "Acesso individual | Validade de 30 dias"
         },
