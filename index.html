@@ -162,14 +162,108 @@
     let settings = {};
     let currentCategory = 'todos';
     
-    // --- Funções de Renderização e Lógica ---
+    // --- Funções Auxiliares ---
     function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
     function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); updateCart(); } }
     function saveCart() { localStorage.setItem('trocoTVCart', JSON.stringify(cart)); }
     function changeQuantity(change) { const input = document.getElementById('productQuantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }
     function showAlert(message, type) { const alert = document.createElement("div"); alert.className = `alert alert-${type}`; alert.textContent = message; document.body.appendChild(alert); setTimeout(() => { alert.style.animation = "fadeOut 0.5s ease"; setTimeout(() => alert.remove(), 500); }, 3000); }
-    function goHome() { document.getElementById("homePage").classList.remove("hidden"); document.getElementById("productDetail").classList.add("hidden"); }
     function toggleCart() { document.getElementById("cartDropdown").classList.toggle("show"); }
+
+    // --- Lógica de Navegação e Roteamento ---
+
+    /**
+     * Função principal que controla qual "página" é exibida.
+     * Ela lê a hash da URL (ex: #produto/1) e mostra a visão correta.
+     */
+    function handleLocation() {
+        const hash = window.location.hash;
+        if (hash.startsWith('#produto/')) {
+            const productId = parseInt(hash.split('/')[1]);
+            if (products.length > 0) {
+                renderProductDetail(productId);
+            } else {
+                // Se os produtos ainda não carregaram, espere e tente novamente.
+                document.addEventListener('productsLoaded', () => renderProductDetail(productId), { once: true });
+            }
+        } else {
+            renderHomePage();
+        }
+    }
+
+    /**
+     * Navega para a página de detalhes de um produto.
+     * Adiciona um novo estado ao histórico do navegador.
+     * @param {number} id - O ID do produto a ser exibido.
+     */
+    function navigateToProduct(id) {
+        // Cria um objeto de estado para saber onde estamos na navegação.
+        const state = { page: 'product', productId: id };
+        // Define o título da página (informativo, pouco usado pelos navegadores).
+        const title = `Produto ${id}`;
+        // Define a nova URL com a hash.
+        const url = `#produto/${id}`;
+        // Adiciona a nova entrada no histórico, mudando a URL sem recarregar a página.
+        history.pushState(state, title, url);
+        // Renderiza a nova visão.
+        renderProductDetail(id);
+    }
+    
+    /**
+     * Navega de volta para a página inicial.
+     * Pode ser chamado pelos botões "Voltar" do site.
+     */
+    function goHome() {
+        const state = { page: 'home' };
+        const title = 'Página Inicial';
+        // A hash '#' ou o caminho base indicam a página inicial.
+        const url = window.location.pathname; 
+        history.pushState(state, title, url);
+        renderHomePage();
+    }
+
+    // --- Funções de Renderização ---
+
+    /**
+     * Mostra a página inicial com a lista de produtos.
+     */
+    function renderHomePage() {
+        document.getElementById("homePage").classList.remove("hidden");
+        document.getElementById("productDetail").classList.add("hidden");
+    }
+
+    /**
+     * Renderiza e mostra a página de detalhes de um produto.
+     * @param {number} id - O ID do produto.
+     */
+    function renderProductDetail(id) {
+        const product = products.find(p => p.id === id);
+        if (!product) {
+            console.error(`Produto com ID ${id} não encontrado.`);
+            goHome(); // Se o produto não existe, volta para a home.
+            return;
+        }
+        selectedProductId = id;
+        document.getElementById("productName").innerHTML = `<i class="${product.icon}"></i> ${product.name}`;
+        document.getElementById("productDescription").textContent = product.description;
+        document.getElementById("productQuantity").value = 1;
+        
+        const variationsContainer = document.getElementById("variationsContainer");
+        variationsContainer.innerHTML = product.variations.map((variation, index) => 
+            `<div class="variation-btn ${index === 0 ? 'active' : ''}" data-value="${variation.name}" onclick="selectVariation(this, '${variation.name}')">
+                <strong>${variation.name}</strong><br><small>${formatPrice(variation.price)}</small>
+             </div>`
+        ).join('');
+
+        // Seleciona a primeira variação por padrão
+        if (variationsContainer.children[0]) {
+           selectVariation(variationsContainer.children[0], product.variations[0].name);
+        }
+
+        document.getElementById("homePage").classList.add("hidden");
+        document.getElementById("productDetail").classList.remove("hidden");
+        window.scrollTo(0, 0); // Rola a página para o topo.
+    }
 
     function renderCategories() {
         const categoriesData = [{ id: 'todos', name: 'Todos' }, ...new Set(products.map(p => p.category))].map(cat => typeof cat === 'string' ? {id: cat, name: cat.charAt(0).toUpperCase() + cat.slice(1)} : cat);
@@ -181,43 +275,31 @@
         document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
         document.querySelector(`.category-tab[onclick="filterProducts('${categoryId}')"]`).classList.add('active');
         currentCategory = categoryId;
-        renderProducts();
+        renderProductGrid();
     }
     
-    function renderProducts() {
+    /**
+     * Renderiza a grade de produtos na página inicial.
+     * A função 'navigateToProduct' é chamada no 'onclick' de cada card.
+     */
+    function renderProductGrid() {
         const container = document.getElementById('productsByCategory');
         container.innerHTML = '';
         const filteredProducts = currentCategory === 'todos' ? products : products.filter(p => p.category === currentCategory);
         if (filteredProducts.length === 0) { container.innerHTML = '<p class="empty-cart">Nenhum produto encontrado.</p>'; return; }
+        
         const grid = document.createElement('div');
         grid.className = 'product-grid';
         grid.innerHTML = filteredProducts.map(product => {
             const minPrice = Math.min(...product.variations.map(v => v.price));
-            return `<div class="product-card fade-in" onclick="showProduct(${product.id})">
+            // IMPORTANTE: O 'onclick' agora chama a nova função de navegação.
+            return `<div class="product-card fade-in" onclick="navigateToProduct(${product.id})">
                       <i class="${product.icon}"></i><h3>${product.name}</h3><p>${product.description}</p>
                       <div style="margin-top: 0.5rem;"><span style="font-weight: bold;">A partir de ${formatPrice(minPrice)}</span></div>
                       <small>${product.variations.length} opção${product.variations.length > 1 ? 's' : ''}</small>
                     </div>`;
         }).join('');
         container.appendChild(grid);
-    }
-    
-    function showProduct(id) {
-        const product = products.find(p => p.id === id);
-        if (!product) return;
-        selectedProductId = id;
-        document.getElementById("productName").innerHTML = `<i class="${product.icon}"></i> ${product.name}`;
-        document.getElementById("productDescription").textContent = product.description;
-        document.getElementById("productQuantity").value = 1;
-        const variationsContainer = document.getElementById("variationsContainer");
-        variationsContainer.innerHTML = product.variations.map((variation, index) => 
-            `<div class="variation-btn ${index === 0 ? 'active' : ''}" data-value="${variation.name}" onclick="selectVariation(this, '${variation.name}')">
-                <strong>${variation.name}</strong><br><small>${formatPrice(variation.price)}</small>
-             </div>`
-        ).join('');
-        selectVariation(variationsContainer.children[0], product.variations[0].name);
-        document.getElementById("homePage").classList.add("hidden");
-        document.getElementById("productDetail").classList.remove("hidden");
     }
 
     function selectVariation(element, variationName) {
@@ -232,6 +314,8 @@
             <div class="important-note"><strong>Importante:</strong> ${variation.important}</div>`;
     }
 
+    // --- Funções do Carrinho ---
+    
     function addToCart() {
         if (!selectedProductId || !selectedVariationText) { showAlert("Selecione uma opção.", "danger"); return; }
         const quantity = parseInt(document.getElementById('productQuantity').value) || 1;
@@ -316,6 +400,9 @@
             [settings, { items }] = await Promise.all([settingsPromise, productsPromise]);
             products = items;
 
+            // Dispara um evento customizado para notificar que os produtos foram carregados.
+            document.dispatchEvent(new Event('productsLoaded'));
+
             document.title = settings.title || "Troço TV e Streaming";
             document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
             document.getElementById("site-tagline").textContent = settings.tagline;
@@ -323,7 +410,14 @@
 
             loadCart();
             renderCategories();
-            renderProducts();
+            renderProductGrid();
+            
+            // Adiciona o ouvinte do evento 'popstate' para o botão de voltar do navegador.
+            window.addEventListener('popstate', handleLocation);
+            
+            // Chama o handleLocation na carga inicial para tratar URLs diretas (ex: bookmarks).
+            handleLocation();
+
         } catch (error) {
             console.error("Erro ao carregar os dados:", error);
             document.querySelector('.container').innerHTML = "<h1>Erro ao carregar o site. Tente novamente mais tarde.</h1>";
