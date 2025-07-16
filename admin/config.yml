@@ -47,6 +47,13 @@ collections:
               - { label: "Ícone (ex: fas fa-film)", name: "icon", widget: "string" }
               - { label: "Categoria", name: "category", widget: "string" }
               - { label: "Descrição Curta", name: "description", widget: "string" }
+              - label: "Avaliação (1 a 5)" # Novo Campo
+                name: "rating"
+                widget: "number"
+                value_type: "int"
+                min: 1
+                max: 5
+                default: 4
               - label: "Variações do Produto (planos)"
                 name: "variations"
                 widget: "list"
@@ -61,7 +68,7 @@ collections:
                     step: 0.01
                   - { label: "Detalhes", name: "details", widget: "text" }
                   - { label: "Nota Importante", name: "important", widget: "text" }
-                  - label: "Quantidade em Estoque" # Novo Campo
+                  - label: "Quantidade em Estoque"
                     name: "quantity"
                     widget: "number"
                     value_type: "int"
