@@ -3,21 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Troço TV e Streaming - Assinaturas de Streaming</title>
+  <title>Carregando Loja...</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary-color: #1E90FF;
-      --dark-bg: #121212;
-      --card-bg: #1e1e1e;
-      --text-color: #ffffff;
-      --success-color: #25D366;
-      --danger-color: #ff4444;
-      --gray-color: #333333;
-      --light-gray: #555555;
-      --discount-color: #9C27B0;
-      --category-color: #FF5722;
-      --telegram-color: #0088cc;
+      --primary-color: #1E90FF; --dark-bg: #121212; --card-bg: #1e1e1e;
+      --text-color: #ffffff; --success-color: #25D366; --danger-color: #ff4444;
+      --gray-color: #333333; --light-gray: #555555; --discount-color: #9C27B0;
+      --category-color: #FF5722; --telegram-color: #0088cc;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--dark-bg); color: var(--text-color); font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding-top: 80px; padding-bottom: 100px; }
@@ -117,33 +110,8 @@
       <button class="btn btn-success checkout-btn" onclick="checkout()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button>
     </div>
   </div>
-  <div class="container">
-    <div id="homePage">
-      <header>
-        <h1 id="site-title"><i class="fas fa-tv"></i> </h1>
-        <p id="site-tagline"></p>
-      </header>
-      <div class="category-tabs" id="categoryTabs"></div>
-      <div id="productsByCategory"></div>
+  <div class="container" id="main-container">
     </div>
-    <div id="productDetail" class="hidden">
-      <a class="top-back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
-      <div class="product-detail fade-in">
-        <h2 id="productName"><i class="fas fa-info-circle"></i> Produto</h2>
-        <p id="productDescription">Descrição do produto.</p>
-        <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
-        <div id="variationsContainer"></div>
-        <div class="selected-variation"><strong>Selecionado:</strong> <span id="selectedVariation">-</span></div>
-        <div class="quantity-control">
-          <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
-          <input type="number" class="quantity-input" id="productQuantity" value="1" min="1">
-          <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
-        </div>
-        <button class="btn btn-primary" onclick="addToCart()"><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
-      </div>
-      <a class="back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
-    </div>
-  </div>
   <div class="floating-buttons-container">
     <div class="floating-button group-btn" onclick="openGroupWhatsApp()"><i class="fab fa-whatsapp"></i><span class="tooltip">Grupo de Clientes</span></div>
     <div class="floating-button telegram-btn" onclick="openTelegram()"><i class="fab fa-telegram"></i><span class="tooltip">Suporte Telegram</span></div>
@@ -151,9 +119,8 @@
     <div class="floating-button checkout-btn-float" onclick="checkout()"><i class="fas fa-shopping-cart"></i><span class="tooltip">Finalizar Pedido</span></div>
   </div>
   
-  <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
   <script>
+    // --- Variáveis Globais ---
     let cart = [];
     let selectedProductId = null;
     let selectedVariationText = "";
@@ -161,60 +128,79 @@
     let products = [];
     let settings = {};
     let currentCategory = 'todos';
-    
-    // --- Funções de Navegação e Histórico ---
 
-    // Função que decide qual página mostrar com base na URL
+    // --- HTML das Páginas ---
+    const homePageHTML = `
+      <div id="homePage">
+        <header>
+          <h1 id="site-title"><i class="fas fa-tv"></i> </h1>
+          <p id="site-tagline"></p>
+        </header>
+        <div class="category-tabs" id="categoryTabs"></div>
+        <div id="productsByCategory"></div>
+      </div>`;
+
+    const productDetailPageHTML = `
+      <div id="productDetail" class="hidden">
+        <a class="top-back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
+        <div class="product-detail fade-in">
+          <h2 id="productName"><i class="fas fa-info-circle"></i> Produto</h2>
+          <p id="productDescription">Descrição do produto.</p>
+          <h3><i class="fas fa-options"></i> Opções Disponíveis</h3>
+          <div id="variationsContainer"></div>
+          <div class="selected-variation"><strong>Selecionado:</strong> <span id="selectedVariation">-</span></div>
+          <div class="quantity-control">
+            <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+            <input type="number" class="quantity-input" id="productQuantity" value="1" min="1">
+            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+          </div>
+          <button class="btn btn-primary" onclick="addToCart()"><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
+        </div>
+        <a class="back-link" onclick="goHome()"><i class="fas fa-arrow-left"></i> Voltar para produtos</a>
+      </div>`;
+
+    // --- Lógica Principal ---
+    function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
+    function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); } }
+    function saveCart() { localStorage.setItem('trocoTVCart', JSON.stringify(cart)); }
+    function changeQuantity(change) { const input = document.getElementById('productQuantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }
+    function showAlert(message, type) { const alert = document.createElement("div"); alert.className = `alert alert-${type}`; alert.textContent = message; document.body.appendChild(alert); setTimeout(() => { alert.style.animation = "fadeOut 0.5s ease"; setTimeout(() => alert.remove(), 500); }, 3000); }
+    function toggleCart() { document.getElementById("cartDropdown").classList.toggle("show"); }
+
     function handleLocation() {
         const hash = window.location.hash;
         if (hash.startsWith('#produto/')) {
             const productId = parseInt(hash.split('/')[1]);
-            // Se os produtos já foram carregados, mostra a página do produto
-            if (products.length > 0) {
-                renderProductPage(productId);
-            } else {
-                // Se não, espera o evento 'productsLoaded' e então mostra
-                document.addEventListener('productsLoaded', () => renderProductPage(productId), { once: true });
-            }
+            renderProductPage(productId);
         } else {
-            // Se não há hash de produto, mostra a página inicial
             renderHomePage();
         }
     }
 
-    // Função para navegar para a página de um produto
     function navigateToProduct(id) {
-        // Adiciona um estado ao histórico do navegador, mudando a URL sem recarregar
         history.pushState({ productId: id }, `Produto ${id}`, `#produto/${id}`);
-        renderProductPage(id);
+        handleLocation();
     }
     
-    // Função para voltar para a página inicial
     function goHome() {
-        // Adiciona um estado para a página inicial, limpando a URL
-        history.pushState({ productId: null }, 'Página Inicial', window.location.pathname);
-        renderHomePage();
+        history.pushState({ productId: null }, 'Página Inicial', window.location.pathname + window.location.search);
+        handleLocation();
     }
 
-    // "Escuta" o clique no botão de voltar do navegador/celular
-    window.addEventListener('popstate', (event) => {
-        handleLocation();
-    });
-
-
-    // --- Funções de Renderização de Páginas ---
+    window.addEventListener('popstate', handleLocation);
 
     function renderHomePage() {
-        document.getElementById("homePage").classList.remove("hidden");
-        document.getElementById("productDetail").classList.add("hidden");
+        document.getElementById('main-container').innerHTML = homePageHTML + productDetailPageHTML;
+        document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
+        document.getElementById("site-tagline").textContent = settings.tagline;
+        renderCategories();
+        renderProducts();
     }
 
     function renderProductPage(id) {
+        document.getElementById('main-container').innerHTML = homePageHTML + productDetailPageHTML;
         const product = products.find(p => p.id === id);
-        if (!product) {
-            goHome(); // Se o produto não for encontrado, volta para a home
-            return;
-        }
+        if (!product) { goHome(); return; }
         
         selectedProductId = id;
         document.getElementById("productName").innerHTML = `<i class="${product.icon}"></i> ${product.name}`;
@@ -228,21 +214,15 @@
              </div>`
         ).join('');
         
-        selectVariation(variationsContainer.children[0], product.variations[0].name);
+        if (variationsContainer.children.length > 0) {
+            selectVariation(variationsContainer.children[0], product.variations[0].name);
+        }
         
         document.getElementById("homePage").classList.add("hidden");
         document.getElementById("productDetail").classList.remove("hidden");
-        window.scrollTo(0, 0); // Rola a página para o topo
+        window.scrollTo(0, 0);
     }
-
-    // --- Funções do Carrinho e Lógica da Loja ---
-    function formatPrice(price) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price); }
-    function loadCart() { const savedCart = localStorage.getItem('trocoTVCart'); if (savedCart) { cart = JSON.parse(savedCart); updateCart(); } }
-    function saveCart() { localStorage.setItem('trocoTVCart', JSON.stringify(cart)); }
-    function changeQuantity(change) { const input = document.getElementById('productQuantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }
-    function showAlert(message, type) { const alert = document.createElement("div"); alert.className = `alert alert-${type}`; alert.textContent = message; document.body.appendChild(alert); setTimeout(() => { alert.style.animation = "fadeOut 0.5s ease"; setTimeout(() => alert.remove(), 500); }, 3000); }
-    function toggleCart() { document.getElementById("cartDropdown").classList.toggle("show"); }
-
+    
     function renderCategories() {
         const categoriesData = [{ id: 'todos', name: 'Todos' }, ...new Set(products.map(p => p.category))].map(cat => typeof cat === 'string' ? {id: cat, name: cat.charAt(0).toUpperCase() + cat.slice(1)} : cat);
         const container = document.getElementById('categoryTabs');
@@ -265,7 +245,6 @@
         grid.className = 'product-grid';
         grid.innerHTML = filteredProducts.map(product => {
             const minPrice = Math.min(...product.variations.map(v => v.price));
-            // AQUI MUDAMOS a chamada para navigateToProduct
             return `<div class="product-card fade-in" onclick="navigateToProduct(${product.id})">
                       <i class="${product.icon}"></i><h3>${product.name}</h3><p>${product.description}</p>
                       <div style="margin-top: 0.5rem;"><span style="font-weight: bold;">A partir de ${formatPrice(minPrice)}</span></div>
@@ -306,16 +285,19 @@
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         document.getElementById("cart-count").textContent = totalItems;
         document.getElementById("cart-badge").textContent = totalItems;
-        if (cart.length === 0) { cartItems.innerHTML = '<div class="empty-cart">Seu carrinho está vazio</div>'; } 
-        else {
-            cartItems.innerHTML = cart.map(item => `
-                <div class="cart-item fade-in">
-                    <div>
-                        <i class="${item.icon}"></i> <strong>${item.name}</strong> - ${item.variation}
-                        <div><strong>${formatPrice(item.price)} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}</strong></div>
-                    </div>
-                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button>
-                </div>`).join('');
+        if (cartItems) {
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Seu carrinho está vazio</div>';
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item fade-in">
+                        <div>
+                            <i class="${item.icon}"></i> <strong>${item.name}</strong> - ${item.variation}
+                            <div><strong>${formatPrice(item.price)} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}</strong></div>
+                        </div>
+                        <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button>
+                    </div>`).join('');
+            }
         }
         updateCartTotals();
     }
@@ -331,11 +313,16 @@
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const discount = (discountApplied && settings.coupon) ? subtotal * settings.coupon.percentage : 0;
         const total = subtotal - discount;
-        document.getElementById("cart-total").textContent = formatPrice(subtotal);
-        document.getElementById("discount-amount").textContent = formatPrice(discount);
-        document.getElementById("final-total").textContent = formatPrice(total);
-        document.getElementById("discount-applied").style.display = discountApplied ? 'block' : 'none';
-        document.getElementById("cart-discount").style.display = discountApplied ? 'block' : 'none';
+        const cartTotalEl = document.getElementById("cart-total");
+        if (cartTotalEl) cartTotalEl.textContent = formatPrice(subtotal);
+        const discountAmountEl = document.getElementById("discount-amount");
+        if (discountAmountEl) discountAmountEl.textContent = formatPrice(discount);
+        const finalTotalEl = document.getElementById("final-total");
+        if(finalTotalEl) finalTotalEl.textContent = formatPrice(total);
+        const discountAppliedEl = document.getElementById("discount-applied");
+        if(discountAppliedEl) discountAppliedEl.style.display = discountApplied ? 'block' : 'none';
+        const cartDiscountEl = document.getElementById("cart-discount");
+        if(cartDiscountEl) cartDiscountEl.style.display = discountApplied ? 'block' : 'none';
     }
 
     function checkout() {
@@ -352,40 +339,42 @@
         }
     }
 
-    function openSupportWhatsApp() { if (settings.links && settings.links.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent("Olá, preciso de suporte!")}`, "_blank"); }
-    function openTelegram() { if (settings.links && settings.links.support_telegram) window.open(settings.links.support_telegram, "_blank"); }
-    function openGroupWhatsApp() { if (settings.links && settings.links.group_whatsapp) window.open(settings.links.support_whatsapp_number, "_blank"); }
+    function openSupportWhatsApp() { if (settings.links?.support_whatsapp_number) window.open(`https://wa.me/${settings.links.support_whatsapp_number}?text=${encodeURIComponent("Olá, preciso de suporte!")}`, "_blank"); }
+    function openTelegram() { if (settings.links?.support_telegram) window.open(settings.links.support_telegram, "_blank"); }
+    function openGroupWhatsApp() { if (settings.links?.group_whatsapp) window.open(settings.links.group_whatsapp, "_blank"); }
 
-    // --- Inicialização da Página ---
-    async function initPage() {
+    async function init() {
         try {
-            // **MUDANÇA IMPORTANTE: Renomeie a pasta _data para data se houver problemas na publicação**
-            const settingsPromise = fetch('/data/settings.json?v=' + new Date().getTime()).then(res => res.json());
-            const productsPromise = fetch('/data/products.json?v=' + new Date().getTime()).then(res => res.json());
+            const settingsPromise = fetch('/data/settings.json?v=' + new Date().getTime()).then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            });
+            const productsPromise = fetch('/data/products.json?v=' + new Date().getTime()).then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            });
             
-            [settings, { items }] = await Promise.all([settingsPromise, productsPromise]);
-            products = items;
+            const [settingsResponse, productsResponse] = await Promise.all([settingsPromise, productsPromise]);
             
-            // Dispara um evento para notificar que os produtos foram carregados
-            document.dispatchEvent(new Event('productsLoaded'));
-
-            document.title = settings.title || "Troço TV e Streaming";
-            document.getElementById("site-title").innerHTML = `<i class="fas fa-tv"></i> ${settings.title}`;
-            document.getElementById("site-tagline").textContent = settings.tagline;
-            if(settings.coupon) document.getElementById("discountValue").textContent = `${settings.coupon.percentage * 100}%`;
-
+            settings = settingsResponse;
+            products = productsResponse.items || [];
+            
+            document.title = settings.title || "Loja";
+            
             loadCart();
-            renderCategories();
-            renderProducts();
-
-            // Roda a função de localização para verificar a URL na carga inicial
             handleLocation();
+            updateCart(); // Garante que o carrinho seja atualizado com os dados carregados
+
         } catch (error) {
-            console.error("Erro ao carregar os dados:", error);
-            document.querySelector('.container').innerHTML = "<h1>Erro ao carregar o site. Verifique se a pasta de dados foi renomeada corretamente e publicada.</h1>";
+            console.error("Erro fatal ao carregar:", error);
+            const container = document.getElementById('main-container');
+            if (container) {
+              container.innerHTML = `<h1 style='color: var(--danger-color); text-align: center; margin-top: 2rem;'>Erro ao carregar a loja.</h1><p style='color: var(--light-gray); text-align: center;'>Verifique se a pasta de dados foi renomeada para "data" e se os ficheiros foram publicados corretamente.</p>`;
+            }
         }
     }
-    document.addEventListener("DOMContentLoaded", initPage);
+
+    document.addEventListener("DOMContentLoaded", init);
   </script>
 </body>
 </html>
