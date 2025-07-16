@@ -43,6 +43,7 @@ collections:
             fields:
               - { label: "ID (número único)", name: "id", widget: "number" }
               - { label: "Nome do Produto", name: "name", widget: "string" }
+              - { label: "É um produto em destaque?", name: "featured", widget: "boolean", default: false }
               - { label: "Ícone (ex: fas fa-film)", name: "icon", widget: "string" }
               - { label: "Categoria", name: "category", widget: "string" }
               - { label: "Descrição Curta", name: "description", widget: "string" }
@@ -52,6 +53,17 @@ collections:
                 summary: "{{fields.name}} - R$ {{fields.price}}"
                 fields:
                   - { label: "Nome da Variação", name: "name", widget: "string" }
-                  - { label: "Preço", name: "price", widget: "number" }
+                  - label: "Preço"
+                    name: "price"
+                    widget: "number"
+                    value_type: "float"
+                    min: 0
+                    step: 0.01
                   - { label: "Detalhes", name: "details", widget: "text" }
                   - { label: "Nota Importante", name: "important", widget: "text" }
+                  - label: "Quantidade em Estoque" # Novo Campo
+                    name: "quantity"
+                    widget: "number"
+                    value_type: "int"
+                    min: 0
+                    default: 10
