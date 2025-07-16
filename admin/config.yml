@@ -14,7 +14,7 @@ collections:
     files:
       - name: "settings"
         label: "Configurações Gerais"
-        file: "_data/settings.json"
+        file: "data/settings.json" # Caminho corrigido
         fields:
           - { label: "Título Principal do Site", name: "title", widget: "string" }
           - { label: "Slogan abaixo do Título", name: "tagline", widget: "string" }
@@ -34,7 +34,7 @@ collections:
 
       - name: "products"
         label: "Produtos e Assinaturas"
-        file: "_data/products.json"
+        file: "data/products.json" # Caminho corrigido
         fields:
           - name: "items"
             label: "Lista de Produtos"
@@ -47,7 +47,7 @@ collections:
               - { label: "Ícone (ex: fas fa-film)", name: "icon", widget: "string" }
               - { label: "Categoria", name: "category", widget: "string" }
               - { label: "Descrição Curta", name: "description", widget: "string" }
-              - label: "Avaliação (1 a 5)" # Novo Campo
+              - label: "Avaliação (1 a 5)"
                 name: "rating"
                 widget: "number"
                 value_type: "int"
